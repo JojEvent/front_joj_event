@@ -1,12 +1,10 @@
 import React from 'react'
-import Header from './composants/header'
-import Footer from './composants/footer'
+import Acceuil from './pages/acceuil'
 
 const App = () => {
   return (
     <div>
-      <Header />
-      <Footer />
+      <Acceuil />
     </div>
   )
 }
