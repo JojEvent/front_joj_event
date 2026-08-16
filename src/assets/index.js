@@ -13,7 +13,8 @@ import TwitterIcon from "../assets/twitter.svg";
 import TelegramIcon from "../assets/telegram.svg";
 import MailIcon from "../assets/mail.svg";
 import ArrowLeftIcon from "../assets/arrowLeft.svg";
-
+import illust  from "../assets/illust.svg";
+import CheckIcon  from "../assets/check.svg";
 export {
   DashboardIcon,
   EventIcon,
@@ -30,4 +31,6 @@ export {
   TelegramIcon,
   MailIcon,
   ArrowLeftIcon,
+  illust,
+  CheckIcon
 };

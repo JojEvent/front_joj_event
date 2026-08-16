@@ -16,13 +16,13 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",
+    "react-toastify": "^11.1.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@babel/core": "^8.0.0",
     "@babel/preset-react": "^8.0.1",
     "@eslint/js": "^10.0.1",
-    "@rolldown/plugin-babel": "^0.2.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",

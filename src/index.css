@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @font-face {
-    font-family: "Olympic_sans";
-    src: url("./assets/fonts/OlympicSans.ttf") format("truetype");
+  font-family: "Olympic_sans";
+  src: url("./assets/fonts/OlympicSans.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "Olympic_sans_medium";
-    src: url("./assets/fonts/OlympicSans-Medium.ttf") format("truetype");
+  font-family: "Olympic_sans_medium";
+  src: url("./assets/fonts/OlympicSans-Medium.ttf") format("truetype");
 }
 
 @theme {
-    --font-olympic: "Olympic_sans", sans-serif;
-    --font-olympic-medium: "Olympic_sans_medium", sans-serif;
+  --font-olympic: "Olympic_sans", sans-serif;
+  --font-olympic-medium: "Olympic_sans_medium", sans-serif;
 }
