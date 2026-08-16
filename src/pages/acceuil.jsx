@@ -17,7 +17,10 @@ import etape1 from "../assets/etape1.png";
 import etape2 from "../assets/etape2.png";
 import etape3 from "../assets/etape3.png";
 import event_judo from "../assets/event_judo.png";
-
+import article1 from "../assets/article1.png";
+import article2 from "../assets/article2.png";
+import article3 from "../assets/article3.png";
+import article4 from "../assets/article4.png";
 
 // Icônes billetterie : placeholders Figma (63x50, 63x47, 64x48)
 const ticketSteps = [
@@ -133,19 +136,19 @@ const recentResults = [
 // Articles du journal olympique (colonne de gauche)
 const journalArticles = [
   {
-    image: "https://placehold.co/234x150/dc2626/ffffff?text=100m",
+    image: article1,
     date: "100m - 03 June 2026",
     title: "Les sprinteuses sont au rendez-vous",
     description: "Le record du 100m est descendu de 1s",
   },
   {
-    image: "https://placehold.co/234x150/1e4620/ffffff?text=Football",
+    image: article2,
     date: "Football - 03 June 2026",
     title: "Le Senegal face a son destin",
     description: "Le Senegal est a un match de la courone",
   },
   {
-    image: "https://placehold.co/234x150/0ea5e9/ffffff?text=Natation",
+    image: article3,
     date: "Natation - 03 June 2026",
     title: "Les nageurs sont prêts à nager sur Saly",
     description: "Le record au viseur",
@@ -322,7 +325,7 @@ const Acceuil = () => {
             ====================================================== */}
         <section className="w-full max-w-[1220px] mx-auto px-6 py-14">
           
-          {/* En-tête — aligné comme la section 2 */}
+          {/* En-tête */}
           <div className="w-full flex flex-col gap-5">
             <h2 className="text-black text-3xl lg:text-4xl font-bold font-olympic-headline">
               Parcourez les événements à Dakar
@@ -372,9 +375,10 @@ const Acceuil = () => {
         <div className="max-w-[1220px] mx-auto border-t border-black/10" />
 
         {/* ======================================================
-            SECTION 4 : DERNIERS RÉSULTATS (Figma)
+            SECTION 4 : DERNIERS RÉSULTATS
             ====================================================== */}
-        <section className="max-w-[1220px] mx-auto px-6 lg:px-[110px] py-14 flex flex-col gap-14">
+        <section className="w-full max-w-[1220px] mx-auto px-6 py-14">
+          <div className="flex flex-col gap-10">
           <h2 className="text-black text-3xl lg:text-4xl font-bold font-olympic-headline">
             Derniers Résultats
           </h2>
@@ -430,12 +434,18 @@ const Acceuil = () => {
               ))}
             </div>
           </div>
+          </div>
         </section>
 
+        {/* Ligne de séparation */}
+        <div className="max-w-[1220px] mx-auto border-t border-black/10" />
+
+
         {/* ======================================================
-            SECTION 5 : JOURNAL OLYMPIQUE (Figma)
+            SECTION 5 : JOURNAL OLYMPIQUE 
             ====================================================== */}
-        <section className="max-w-[1220px] mx-auto px-6 lg:px-[110px] py-5 flex flex-col gap-14">
+        <section className="w-full max-w-[1220px] mx-auto px-6 py-14">
+          <div className="flex flex-col gap-10">
           <h2 className="text-black text-3xl lg:text-4xl font-bold font-olympic-headline">
             Journal Olympique
           </h2>
@@ -459,7 +469,7 @@ const Acceuil = () => {
             <div className="w-full lg:w-[570px] h-[400px] lg:h-[609px] relative rounded-md overflow-hidden cursor-pointer">
               <img
                 className="w-full h-full object-cover absolute inset-0"
-                src="https://placehold.co/570x609/27272a/ffffff?text=Cyclisme"
+                src={article4}
                 alt="Cyclisme sur piste"
               />
               <div className="absolute inset-0 bg-black/60 rounded-md" />
@@ -475,6 +485,7 @@ const Acceuil = () => {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </section>
       </main>
