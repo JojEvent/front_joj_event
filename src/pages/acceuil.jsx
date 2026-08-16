@@ -16,6 +16,7 @@ import assistant from "../assets/assistantIA.png";
 import etape1 from "../assets/etape1.png";
 import etape2 from "../assets/etape2.png";
 import etape3 from "../assets/etape3.png";
+import event_judo from "../assets/event_judo.png";
 
 
 // Icônes billetterie : placeholders Figma (63x50, 63x47, 64x48)
@@ -47,7 +48,7 @@ const events = [
     date: "Assis. 1er novembre, 07h00",
     location: "Arène de Diamniadio",
     price: "A partir de 15.000 FCFA",
-    image: "https://placehold.co/385x320/0369a1/ffffff?text=Judo",
+    image: event_judo,
     tags: [
       { label: "JUDO", color: "#0369a1" },
       { label: "SEMIS", color: "#ffffff", textColor: "#27272a" },
@@ -58,7 +59,7 @@ const events = [
     date: "Soleil. 2 novembre, 10h00",
     location: "Centre Aquatique Dakar",
     price: "À partir de 10.000 FCFA",
-    image: "https://placehold.co/385x320/1e4620/ffffff?text=Natation",
+    image: event_judo,
     tags: [
       { label: "NATATION", color: "#15803d" },
       { label: "MÉDAILLE D'OR", color: "#ca8a04" },
@@ -69,7 +70,7 @@ const events = [
     date: "Lun. 3 novembre, 16h30",
     location: "Stade Léopold Sédar Senghor",
     price: "À partir de 5.000 FCFA",
-    image: "https://placehold.co/385x320/dc2626/ffffff?text=Athletisme",
+    image: event_judo,
     tags: [{ label: "ATHLÉTISME", color: "#dc2626" }],
   },
   {
@@ -77,7 +78,7 @@ const events = [
     date: "Mar. 4 novembre, 19h00",
     location: "Place de la Nation",
     price: "A partir de 12.000 FCFA",
-    image: "https://placehold.co/385x320/ca8a04/ffffff?text=Basket",
+    image: event_judo,
     tags: [
       { label: "BASKET-BALL 3x3", color: "#ca8a04" },
       { label: "FINALES", color: "#27272a" },
@@ -88,7 +89,7 @@ const events = [
     date: "Mercredi. 5 novembre, 09h00",
     location: "Palais des Sports de Diamniadio",
     price: "A partir de 8.000 FCFA",
-    image: "https://placehold.co/385x320/0ea5e9/ffffff?text=Gymnastique",
+    image: event_judo,
     tags: [{ label: "GYMNASTIQUE", color: "#0284c7" }],
   },
   {
@@ -96,7 +97,7 @@ const events = [
     date: "Jeu. 6 novembre, 14h00",
     location: "Arène Nationale de Lutte",
     price: "À partir de 7.500 FCFA",
-    image: "https://placehold.co/385x320/78716c/ffffff?text=Escrime",
+    image: event_judo,
     tags: [
       { label: "ESCRIME", color: "#78716c" },
       { label: "DISPONIBLE", color: "#15803d" },
