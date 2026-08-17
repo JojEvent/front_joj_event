@@ -178,7 +178,7 @@ const FlagSenegal = () => (
 // ============================================================
 const Acceuil = () => {
   return (
-    <div className="w-full bg-white overflow-x-hidden">
+    <div className="w-full bg-white">
       <Header />
 
       <main className="w-full max-w-[1440px] mx-auto">
