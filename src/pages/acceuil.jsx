@@ -235,13 +235,13 @@ const Acceuil = () => {
 
               {/* 1. Monument en arrière-plan */}
              <img
-                className="absolute left-1/2 lg:left-[-80px] top-[-80px] lg:top-[-177px] -translate-x-1/2 lg:translate-x-0 w-[600px] lg:w-[993px] h-auto lg:h-[732px] opacity-100 mix-blend-luminosity object-contain pointer-events-none z-0"
+                className="absolute left-1/2 lg:left-[-80px] top-[-80px] lg:top-[-177px] -translate-x-1/2 lg:translate-x-0 w-[600px] lg:w-[993px] h-auto lg:h-[732px] opacity-[500] mix-blend-luminosity object-contain pointer-events-none z-0"
                 src={MonumentBg}
                 alt="Monument de l'African Renaissance en arrière-plan"
               />
               {/* 2. Mascotte lion (image principale) */}
               <img
-                className="relative lg:absolute lg:left-[80px] lg:top-[-180px] mx-auto lg:mx-0 block w-[430px] sm:w-[560px] lg:w-[460px] h-auto lg:h-[840px] object-contain z-10"
+                className="relative lg:absolute lg:left-[80px] lg:top-[-180px] mx-auto lg:mx-0 block w-[430px] sm:w-[560px] lg:w-[460px] h-auto lg:h-[840px] object-contain z-0"
                 src={MascotteLion}
                 alt="Mascotte lion des JOJ Dakar 2026"
               />
