@@ -11,14 +11,14 @@
 }
 
 @font-face {
-    font-family: "Olympic_headline";
-    src: url("./assets/fonts/OlympicHeadline-Regular.ttf") format("truetype");
+  font-family: "Olympic_headline";
+  src: url("./assets/fonts/OlympicHeadline-Regular.ttf") format("truetype");
 }
 
 @theme {
-    --font-olympic: "Olympic_sans", sans-serif;
-    --font-olympic-medium: "Olympic_sans_medium", sans-serif;
-    --font-olympic-headline: "Olympic_headline", sans-serif;
-    --color-secondary: #16a34a;
-    --color-primaire: #0284c7;
+  --font-olympic: "Olympic_sans", sans-serif;
+  --font-olympic-medium: "Olympic_sans_medium", sans-serif;
+  --font-olympic-headline: "Olympic_headline", sans-serif;
+  --color-secondary: #16a34a;
+  --color-primaire: #0284c7;
 }

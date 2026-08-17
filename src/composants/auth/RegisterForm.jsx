@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { GoogleIcon, InputField } from "./utilsForm";
 import { useAuth } from "../../context/authContext";
+import { Loader2 } from "lucide-react";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -150,10 +151,15 @@ const RegisterForm = () => {
         )}
         {/* Bouton S'inscrire */}
         <button
+          disabled={loading}
           type="submit"
-          className="w-full h-11 mt-1 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-sm rounded-lg tracking-wider transition"
+          className="w-full h-11 flex items-center justify-center mt-1 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-sm rounded-lg tracking-wider transition"
         >
-          S'inscrire
+          {loading ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            "S'inscrire"
+          )}
         </button>
 
         {/* Séparateur Or */}

@@ -19,7 +19,11 @@ const Header = () => {
     <header className="w-full flex justify-center px-4 lg:px-[59px] py-4">
       <div className="w-full max-w-[1322px] px-4 py-4 bg-white rounded-xl shadow-[0px_0px_6px_0px_rgba(0,0,0,0.12)] flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-6">
         <Link to="/">
-          <img className="w-24 h-11 object-contain" src={LogoHeader} alt="JOJ Dakar 2026" />
+          <img
+            className="w-24 h-11 object-contain"
+            src={LogoHeader}
+            alt="JOJ Dakar 2026"
+          />
         </Link>
 
         <nav className="flex flex-wrap justify-center items-center gap-6 lg:gap-10">
@@ -43,14 +47,16 @@ const Header = () => {
 
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
-              {[BellIcon, PanierIcon, LikeIcon, ProfilIcon].map((icon, index) => (
-                <div
-                  key={index}
-                  className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
-                >
-                  <img src={icon} alt="" className="w-4 h-4" />
-                </div>
-              ))}
+              {[BellIcon, PanierIcon, LikeIcon, ProfilIcon].map(
+                (icon, index) => (
+                  <div
+                    key={index}
+                    className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
+                  >
+                    <img src={icon} alt="" className="w-4 h-4" />
+                  </div>
+                ),
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-3">

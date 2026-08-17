@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../../context/authContext";
-
+import { Loader2 } from "lucide-react";
 
 const OtpInput = ({ index, inputRef, onKeyDown }) => (
   <input
@@ -69,9 +69,9 @@ const VerifyEmailForm = ({ email = "exemple@gmail.com" }) => {
         {/* Bouton Vérifier */}
         <button
           type="submit"
-          className="w-full h-12 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-base uppercase tracking-wide rounded-lg transition"
+          className="w-full h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-base uppercase tracking-wide rounded-lg transition"
         >
-          Vérifier
+          {loading ? <Loader2 className="animate-spin" /> : "Vérifier"}
         </button>
       </form>
 
