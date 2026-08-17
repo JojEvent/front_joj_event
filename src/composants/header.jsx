@@ -8,12 +8,24 @@ import {
   SearchIcon,
 } from "../assets";
 import { useAuth } from "../context/authContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // En-tête de la page d'accueil (design Figma)
 const Header = () => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const navLinks = ["Événements", "Carte", "Billets", "Résultat"];
+
+  const naviguerVers = (link) => {
+    if (link === "Résultat") {
+      navigate("/resultat");
+    } else if (link === "Événements") {
+      navigate("/");
+    } else {
+      toast.info(`La page ${link} sera bientôt disponible !`);
+    }
+  };
 
   return (
     <header className="w-full flex justify-center px-4 lg:px-[59px] py-4 sticky top-0 z-50 bg-white/80 backdrop-blur-sm">
@@ -30,6 +42,7 @@ const Header = () => {
           {navLinks.map((link) => (
             <span
               key={link}
+              onClick={() => naviguerVers(link)}
               className="text-black text-base font-normal font-olympic leading-6 cursor-pointer hover:text-green-600 transition-colors"
             >
               {link}

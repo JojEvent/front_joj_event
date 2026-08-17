@@ -17,7 +17,9 @@ import RegisterAuth from "./pages/auth/RegisterAuth.jsx";
 import VerifyEmail from "./pages/auth/verifyEmail.jsx";
 import AuthProvider from "./context/authContext.jsx";
 import OAuthCallback from "./pages/auth/oAuth/callback.jsx";
-import Onboarding  from "./pages/oboarding/onboarding.jsx";
+import Onboarding from "./pages/oboarding/onboarding.jsx";
+
+import PageResultats from "./pages/resultats.jsx";
 
 const Root = () => (
   <AuthProvider>
@@ -31,6 +33,8 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       { path: "/", element: <App /> },
+      { path: "/resultat", element: <PageResultats /> },
+      { path: "/resultats", element: <PageResultats /> },
       {
         path: "/admin",
         element: <AdminLayout />,
@@ -51,7 +55,8 @@ const router = createBrowserRouter([
         ],
       },
       { path: "/oauth/callback", element: <OAuthCallback /> },
-      {path: "/onboarding", element: <Onboarding />}
+      { path: "/onboarding", element: <Onboarding /> },
+      { path: "*", element: <App /> },
     ],
   },
 ]);
