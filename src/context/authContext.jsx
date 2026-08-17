@@ -18,10 +18,25 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const saveToken = (tokens) => {
-    localStorage.setItem("accessToken", tokens.access);
-    localStorage.setItem("refreshToken", tokens.refresh);
-    instanceApi.defaults.headers.common["Authorization"] =
-      `Bearer ${tokens.access}`;
+    if (!tokens) return;
+    if (tokens.access) {
+      localStorage.setItem("accessToken", tokens.access);
+      instanceApi.defaults.headers.common["Authorization"] = `Bearer ${tokens.access}`;
+    }
+    if (tokens.refresh) {
+      localStorage.setItem("refreshToken", tokens.refresh);
+    }
+  };
+
+  const loginOAuth = async (tokens) => {
+    saveToken(tokens);
+    setIsAuthenticated(true);
+    try {
+      const res = await instanceApi.get("/user/profile/");
+      setUser(res.data);
+    } catch (e) {
+      console.error("Erreur chargement profil OAuth:", e);
+    }
   };
 
   useEffect(() => {
@@ -227,6 +242,8 @@ const AuthProvider = ({ children }) => {
         verifyEmail,
         login,
         loginWithGoogle,
+        loginOAuth,
+        saveToken,
         completeOnboarding,
         logout,
         user,
