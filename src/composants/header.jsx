@@ -16,7 +16,7 @@ const Header = () => {
   const navLinks = ["Événements", "Carte", "Billets", "Résultat"];
 
   return (
-    <header className="w-full flex justify-center px-4 lg:px-[59px] py-4">
+    <header className="w-full flex justify-center px-4 lg:px-[59px] py-4 sticky top-0 z-50 bg-white/80 backdrop-blur-sm">
       <div className="w-full max-w-[1322px] px-4 py-4 bg-white rounded-xl shadow-[0px_0px_6px_0px_rgba(0,0,0,0.12)] flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-6">
         <Link to="/">
           <img
