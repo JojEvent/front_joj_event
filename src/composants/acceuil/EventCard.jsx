@@ -18,9 +18,8 @@ const EventCard = ({
 
   return (
     <article className="w-full max-w-[384px] flex flex-col">
-      
       {/* ================= IMAGE ================= */}
-      <div className="relative w-full aspect-square overflow-hidden rounded-[30px]">
+      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[30px]">
         <img
           src={image}
           alt={title}
@@ -45,11 +44,10 @@ const EventCard = ({
       </div>
 
       {/* ================= INFORMATIONS ================= */}
-      <div className="pt-5 flex flex-col">
+      <div className="pt-4 flex flex-col">
 
         {/* Titre + favoris */}
         <div className="flex items-start justify-between gap-4">
-          
           <h3 className="flex-1 text-[20px] font-bold font-olympic leading-[1.35] text-zinc-900 line-clamp-2">
             {title}
           </h3>
@@ -92,7 +90,7 @@ const EventCard = ({
         </div>
 
         {/* Date */}
-        <p className="mt-2 text-[17px] font-bold font-olympic leading-6 text-red-600">
+        <p className="mt-1.5 text-[17px] font-bold font-olympic leading-6 text-red-600">
           {date}
         </p>
 
@@ -102,7 +100,7 @@ const EventCard = ({
         </p>
 
         {/* Prix */}
-        <p className="mt-5 text-[17px] font-bold font-olympic leading-6 text-zinc-900">
+        <p className="mt-3 text-[17px] font-bold font-olympic leading-6 text-zinc-900">
           {price}
         </p>
       </div>

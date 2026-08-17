@@ -241,7 +241,7 @@ const Acceuil = () => {
               />
               {/* 2. Mascotte lion (image principale) */}
               <img
-                className="relative lg:absolute lg:left-[-50px] lg:top-[-200px] mx-auto lg:mx-0 block w-[430px] sm:w-[560px] lg:w-[800px] h-auto lg:h-[840px] object-contain z-10"
+                className="relative lg:absolute lg:left-[80px] lg:top-[-180px] mx-auto lg:mx-0 block w-[430px] sm:w-[560px] lg:w-[460px] h-auto lg:h-[840px] object-contain z-10"
                 src={MascotteLion}
                 alt="Mascotte lion des JOJ Dakar 2026"
               />
@@ -255,7 +255,7 @@ const Acceuil = () => {
 
               {/* 4. Petite mascotte en bas à droite */}
               <img
-                className="absolute right-0 bottom-0 w-32 sm:w-48 lg:bottom-45 lg:w-64 lg:h-52 object-contain z-30 hidden sm:block lg:left-165"
+                className="fixed right-4 bottom-4 w-32 sm:w-48 lg:bottom-8 lg:right-8 lg:w-64 lg:h-52 object-contain z-30 hidden sm:block pointer-events-none"
                 src={assistant}
                 alt="Mascotte JOJ"
               />
