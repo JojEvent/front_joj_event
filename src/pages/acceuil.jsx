@@ -2,11 +2,11 @@ import React from "react";
 import { ArrowRight } from "lucide-react";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
-import SportIcon from "../composants/SportIcon";
-import EventCard from "../composants/EventCard";
-import StepCard from "../composants/StepCard";
-import RecentResult from "../composants/RecentResult";
-import JournalArticle from "../composants/JournalArticle";
+import SportIcon from "../composants/acceuil/SportIcon";
+import EventCard from "../composants/acceuil/EventCard";
+import StepCard from "../composants/acceuil/StepCard";
+import RecentResult from "../composants/acceuil/RecentResult";
+import JournalArticle from "../composants/acceuil/JournalArticle";
 
 // Images du hero (dossier assets)
 import MascotteLion from "../assets/mascotte.gif";
@@ -465,7 +465,7 @@ const Acceuil = () => {
               ))}
             </div>
 
-            {/* Article vedette cyclisme (Figma) */}
+            {/* Article vedette cyclisme */}
             <div className="w-full lg:w-[570px] h-[400px] lg:h-[609px] relative rounded-md overflow-hidden cursor-pointer">
               <img
                 className="w-full h-full object-cover absolute inset-0"
