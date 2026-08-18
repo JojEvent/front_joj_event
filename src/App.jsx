@@ -1,5 +1,6 @@
 import React from 'react'
-import Acceuil from './pages/acceuil'
+import Header from './composants/header'
+import Footer from './composants/footer'
 
 const App = () => {
   // const { isAuthenticated, user, logout } = useAuth()
@@ -10,7 +11,8 @@ const App = () => {
 
   return (
     <div>
-      <Acceuil />
+      <Header />
+      <Footer />
     </div>
   )
 }

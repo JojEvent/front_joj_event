@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
@@ -214,7 +215,10 @@ const Acceuil = () => {
 
               {/* Bouton vert */}
               <div className="w-full max-w-80 px-2 py-3">
-                <button className="w-full h-12 lg:h-14 px-5 bg-secondary rounded-[10px] flex justify-center items-center gap-2 hover:bg-green-700 cursor-pointer transition-colors">
+                <button 
+                  onClick={() => navigate("/evenements")}
+                  className="w-full h-12 lg:h-14 px-5 bg-secondary rounded-[10px] flex justify-center items-center gap-2 hover:bg-green-700 cursor-pointer transition-colors"
+                >
                   <span className="text-white text-base lg:text-lg font-bold">
                     Explorer les événements
                   </span>

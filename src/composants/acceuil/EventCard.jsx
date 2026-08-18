@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 
 // Carte événement
 const EventCard = ({
+  id = 1,
   title,
   date,
   location,
@@ -11,13 +13,22 @@ const EventCard = ({
   tags = [],
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
 
-  const handleFavorite = () => {
+  const handleFavorite = (e) => {
+    e.stopPropagation();
     setIsFavorite((prev) => !prev);
   };
 
+  const handleCardClick = () => {
+    navigate(`/evenements/${id}`);
+  };
+
   return (
-    <article className="w-full max-w-[384px] flex flex-col">
+    <article
+      onClick={handleCardClick}
+      className="w-full max-w-[384px] flex flex-col cursor-pointer hover:opacity-95 transition-opacity"
+    >
       {/* ================= IMAGE ================= */}
       <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[30px]">
         <img
