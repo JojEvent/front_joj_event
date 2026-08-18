@@ -1,20 +1,7 @@
-import React from 'react'
-import Header from './composants/header'
-import Footer from './composants/footer'
+import Acceuil from "./pages/acceuil.jsx";
 
 const App = () => {
-  // const { isAuthenticated, user, logout } = useAuth()
+  return <Acceuil />;
+};
 
-// useEffect(() => {
-// console.log(user?.last_name)
-// }, [user])
-
-  return (
-    <div>
-      <Header />
-      <Footer />
-    </div>
-  )
-}
-
-export default App
+export default App;
