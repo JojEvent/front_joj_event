@@ -46,8 +46,7 @@ export default function PaiementPage() {
       totalAmount,
     });
     toast.success("Paiement réussi ! Génération de vos billets...");
-    // Redirection vers l'étape 4 ou de confirmation
-    navigate("/");
+    navigate("/succes");
   };
 
   return (
