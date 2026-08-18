@@ -16,6 +16,7 @@ import EvenementsPage from "./pages/Evenementspage.jsx";
 import EventDetailPage from "./pages/EventDetailPage.jsx";
 import PageResultats from "./pages/resultats.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import PaiementPage from "./pages/PaiementPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
 
 // Pages Auth
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       { path: "/resultat", element: <PageResultats /> },
       { path: "/resultats", element: <PageResultats /> },
       { path: "/panier", element: <CartPage /> },
+      { path: "/paiement", element: <PaiementPage /> },
       { path: "/profil", element: <ProfilePage /> },
       {
         path: "/admin",

@@ -13,7 +13,10 @@ import {
   cartItemsMock,
 } from "../../mocks/panierMock";
 
+import { useNavigate } from "react-router-dom";
+
 export default function CartPage() {
+  const navigate = useNavigate();
   const [items, setItems] = useState(cartItemsMock);
 
   const handleEdit = (id) => {
@@ -29,7 +32,7 @@ export default function CartPage() {
   };
 
   const handlePay = () => {
-    console.log("Paiement lancé pour", items.length, "article(s)");
+    navigate("/paiement");
   };
 
   return (
