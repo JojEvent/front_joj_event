@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
@@ -7,6 +8,7 @@ import EventCard from "../composants/acceuil/EventCard";
 import StepCard from "../composants/acceuil/StepCard";
 import RecentResult from "../composants/acceuil/RecentResult";
 import JournalArticle from "../composants/acceuil/JournalArticle";
+import { useEvents } from "../hooks/Usevents";
 
 // Images du hero (dossier assets)
 import MascotteLion from "../assets/mascotte.gif";
@@ -44,69 +46,7 @@ const ticketSteps = [
 // Filtres événements (Figma)
 const eventFilters = ["Aujourd'hui", "Tous", "Pour vous", "Weekend"];
 
-// 6 événements — ordre Figma (3 colonnes × 2 lignes)
-const events = [
-  {
-    title: "Judo - Demi-finales Hommes",
-    date: "Assis. 1er novembre, 07h00",
-    location: "Arène de Diamniadio",
-    price: "A partir de 15.000 FCFA",
-    image: event_judo,
-    tags: [
-      { label: "JUDO", color: "#0369a1" },
-      { label: "SEMIS", color: "#ffffff", textColor: "#27272a" },
-    ],
-  },
-  {
-    title: "Finale du 100 m nage libre",
-    date: "Soleil. 2 novembre, 10h00",
-    location: "Centre Aquatique Dakar",
-    price: "À partir de 10.000 FCFA",
-    image: event_judo,
-    tags: [
-      { label: "NATATION", color: "#15803d" },
-      { label: "MÉDAILLE D'OR", color: "#ca8a04" },
-    ],
-  },
-  {
-    title: "Qualifications des haies",
-    date: "Lun. 3 novembre, 16h30",
-    location: "Stade Léopold Sédar Senghor",
-    price: "À partir de 5.000 FCFA",
-    image: event_judo,
-    tags: [{ label: "ATHLÉTISME", color: "#dc2626" }],
-  },
-  {
-    title: "Basket 3x3 - Série Finale",
-    date: "Mar. 4 novembre, 19h00",
-    location: "Place de la Nation",
-    price: "A partir de 12.000 FCFA",
-    image: event_judo,
-    tags: [
-      { label: "BASKET-BALL 3x3", color: "#ca8a04" },
-      { label: "FINALES", color: "#27272a" },
-    ],
-  },
-  {
-    title: "Gymnastique Artistique",
-    date: "Mercredi. 5 novembre, 09h00",
-    location: "Palais des Sports de Diamniadio",
-    price: "A partir de 8.000 FCFA",
-    image: event_judo,
-    tags: [{ label: "GYMNASTIQUE", color: "#0284c7" }],
-  },
-  {
-    title: "Escrime individuelle hommes",
-    date: "Jeu. 6 novembre, 14h00",
-    location: "Arène Nationale de Lutte",
-    price: "À partir de 7.500 FCFA",
-    image: event_judo,
-    tags: [
-      { label: "ESCRIME", color: "#78716c" },
-      { label: "DISPONIBLE", color: "#15803d" },
-    ],
-  },
-];
+
 
 // Classement médailles — drapeau Sénégal répété (Figma)
 const classementRows = [1, 2, 3, 4];
@@ -177,8 +117,11 @@ const FlagSenegal = () => (
 // PAGE D'ACCUEIL — design Figma (node 77-4)
 // ============================================================
 const Acceuil = () => {
+  const navigate = useNavigate();
+  const { events: apiEvents, isLoading: isEventsLoading } = useEvents();
+
   return (
-    <div className="w-full bg-white overflow-x-hidden">
+    <div className="w-full bg-white">
       <Header />
 
       <main className="w-full max-w-[1440px] mx-auto">
@@ -214,7 +157,10 @@ const Acceuil = () => {
 
               {/* Bouton vert */}
               <div className="w-full max-w-80 px-2 py-3">
-                <button className="w-full h-12 lg:h-14 px-5 bg-secondary rounded-[10px] flex justify-center items-center gap-2 hover:bg-green-700 cursor-pointer transition-colors">
+                <button 
+                  onClick={() => navigate("/evenements")}
+                  className="w-full h-12 lg:h-14 px-5 bg-secondary rounded-[10px] flex justify-center items-center gap-2 hover:bg-green-700 cursor-pointer transition-colors"
+                >
                   <span className="text-white text-base lg:text-lg font-bold">
                     Explorer les événements
                   </span>
@@ -235,13 +181,13 @@ const Acceuil = () => {
 
               {/* 1. Monument en arrière-plan */}
              <img
-                className="absolute left-1/2 lg:left-[-80px] top-[-80px] lg:top-[-177px] -translate-x-1/2 lg:translate-x-0 w-[600px] lg:w-[993px] h-auto lg:h-[732px] opacity-100 mix-blend-luminosity object-contain pointer-events-none z-0"
+                className="absolute left-1/2 lg:left-[-80px] top-[-80px] lg:top-[-177px] -translate-x-1/2 lg:translate-x-0 w-[600px] lg:w-[993px] h-auto lg:h-[732px] opacity-[500] mix-blend-luminosity object-contain pointer-events-none z-0"
                 src={MonumentBg}
                 alt="Monument de l'African Renaissance en arrière-plan"
               />
               {/* 2. Mascotte lion (image principale) */}
               <img
-                className="relative lg:absolute lg:left-[80px] lg:top-[-180px] mx-auto lg:mx-0 block w-[430px] sm:w-[560px] lg:w-[460px] h-auto lg:h-[840px] object-contain z-10"
+                className="relative lg:absolute lg:left-[80px] lg:top-[-180px] mx-auto lg:mx-0 block w-[430px] sm:w-[560px] lg:w-[460px] h-auto lg:h-[840px] object-contain z-0"
                 src={MascotteLion}
                 alt="Mascotte lion des JOJ Dakar 2026"
               />
@@ -349,20 +295,33 @@ const Acceuil = () => {
           </div>
 
           {/* Grille 3 colonnes × 2 lignes */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mt-10">
-            {events.map((event) => (
-              <div
-                key={event.title}
-                className="cursor-pointer hover:opacity-90 transition-opacity"
-              >
-                <EventCard {...event} />
-              </div>
-            ))}
-          </div>
+          {isEventsLoading ? (
+            <div className="w-full py-12 flex justify-center items-center">
+              <p className="text-stone-500 font-medium">Chargement des événements...</p>
+            </div>
+          ) : apiEvents.length === 0 ? (
+            <div className="w-full py-12 flex justify-center items-center">
+              <p className="text-stone-500 font-medium">Aucun événement disponible pour le moment.</p>
+            </div>
+          ) : (
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mt-10">
+              {apiEvents.map((event, index) => (
+                <div
+                  key={event.id || index}
+                  className="cursor-pointer hover:opacity-90 transition-opacity"
+                >
+                  <EventCard {...event} />
+                </div>
+              ))}
+            </div>
+          )}
 
-          {/* Bouton */}
+          {/* Bouton Voir Plus */}
           <div className="flex justify-center mt-10">
-            <button className="px-3 py-2 bg-primaire rounded-lg hover:bg-sky-700 cursor-pointer transition-colors">
+            <button
+              onClick={() => navigate("/evenements")}
+              className="px-3 py-2 bg-primaire rounded-lg hover:bg-sky-700 cursor-pointer transition-colors"
+            >
               <span className="text-neutral-100 text-base font-bold font-olympic-headline">
                 Voir Plus
               </span>
