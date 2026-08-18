@@ -59,7 +59,7 @@ export default function ArticlesList() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      
+      <Header />
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Tous les articles</h1>
@@ -112,7 +112,7 @@ export default function ArticlesList() {
           </div>
         )}
       </main>
-      
+      <Footer />
     </div>
   );
 }
