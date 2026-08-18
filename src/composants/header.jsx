@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import LogoHeader from "../assets/logoPrincipal.svg";
 import {
   BellIcon,
@@ -10,55 +11,46 @@ import {
 
 const Header = () => {
   return (
-    <div className="w-full px-2 py-4 bg-white rounded-xl shadow-[0px_0px_6px_0px_rgba(0,0,0,0.12)] inline-flex justify-center items-center gap-40 overflow-hidden">
-      <img className="w-44 h-11" src={LogoHeader} alt="LogoHeader" />
-      <div className="size- bg-white flex justify-center items-center gap-10">
-        <div className="justify-start text-black text-base font-normal font-olympic leading-6">
-          Événements
-        </div>
-        <div className="justify-start text-black text-base font-normal font-['Olympic_Sans'] leading-6">
-          Carte
-        </div>
-        <div className="justify-start text-black text-base font-normal font-['Olympic_Sans'] leading-6">
-          Billets
-        </div>
-        <div className="justify-start text-black text-base font-normal font-['Olympic_Sans'] leading-6">
-          Résultat{" "}
-        </div>
-      </div>
-      <div className="h-11 px-[5px] py-0.5 bg-white flex justify-center items-center gap-4 overflow-hidden">
-        <div className="w-60 h-9 inline-flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-          <div className="self-stretch p-2 rounded-md outline outline-1 outline-offset-[-1px] outline-black/10 inline-flex justify-end items-center gap-1">
-            <div className="flex-1 justify-start text-black/50 text-sm font-normal font-['Olympic_Sans'] leading-5">
-              Search in site
+    <header className="mx-auto w-full max-w-[1000px] px-3 pt-2 md:px-0 md:pt-0">
+      <div className="min-h-[58px] rounded-xl bg-white px-4 py-2 shadow-[0px_0px_6px_0px_rgba(0,0,0,0.12)] md:px-7">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <Link to="/profil" className="shrink-0" aria-label="JOJ Event - Profil">
+            <img className="h-11 w-24 object-contain" src={LogoHeader} alt="JOJ Event" />
+          </Link>
+
+          <nav className="order-3 flex w-full items-center justify-center gap-6 text-xs text-black md:order-none md:w-auto md:gap-8">
+            <a href="#evenements" className="hover:text-sky-600">Événements</a>
+            <a href="#carte" className="hover:text-sky-600">Carte</a>
+            <a href="#billets" className="hover:text-sky-600">Billets</a>
+            <a href="#resultat" className="hover:text-sky-600">Résultat</a>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2">
+            <div className="hidden h-9 w-40 items-center gap-1 rounded-md border border-black/10 px-2 md:flex">
+              <span className="flex-1 text-xs text-black/50">Search in site</span>
+              <img className="h-4 w-4" src={SearchIcon} alt="Rechercher" />
             </div>
-            <div className="size-5 relative">
-              <img src={SearchIcon} alt="SearchIcon" />
-            </div>
-          </div>
-        </div>
-        <div className="size-9 px-2 py-1.5 bg-stone-50 rounded-[50px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center gap-2.5 overflow-hidden">
-          <div className="size-4 relative overflow-hidden">
-            <img src={BellIcon} alt="BellIcon" />
-          </div>
-        </div>
-        <div className="size-9 px-2 py-1.5 bg-stone-50 rounded-[50px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center gap-2.5 overflow-hidden">
-          <div className="size-5 relative overflow-hidden">
-            <img src={PanierIcon} alt="PanierIcon" />
-          </div>
-        </div>
-        <div className="size-9 px-2 py-1.5 bg-stone-50 rounded-[50px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center gap-2.5 overflow-hidden">
-          <div className="size-4 relative overflow-hidden">
-            <img src={LikeIcon} alt="LikeIcon" />
-          </div>
-        </div>
-        <div className="size-9 px-1.5 py-[5px] bg-stone-50 rounded-[50px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center gap-2.5 overflow-hidden">
-          <div className="size-5 relative overflow-hidden">
-            <img src={ProfilIcon} alt="ProfilIcon" />
+
+            <button className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-50 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.18)]" aria-label="Notifications">
+              <img className="h-4 w-4" src={BellIcon} alt="" />
+            </button>
+            <button className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-50 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.18)]" aria-label="Panier">
+              <img className="h-5 w-5" src={PanierIcon} alt="" />
+            </button>
+            <button className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-50 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.18)]" aria-label="Favoris">
+              <img className="h-4 w-4" src={LikeIcon} alt="" />
+            </button>
+            <Link
+              to="/profil"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-50 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.18)]"
+              aria-label="Mon profil"
+            >
+              <img className="h-5 w-5" src={ProfilIcon} alt="" />
+            </Link>
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

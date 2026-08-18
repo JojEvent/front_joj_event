@@ -1,9 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import App from "./App.jsx";
+import ProfilePage from "./pages/profile.jsx";
 import AdminLayout from "./pages/admin/layout.jsx";
 import DashboardAdmin from "./pages/admin/dashboard.jsx";
 import EvenementAdmin from "./pages/admin/evenement.jsx";
@@ -13,6 +14,7 @@ import UserGestionAdmin from "./pages/admin/userGestion.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
+  { path: "/profil", element: <ProfilePage /> },
   {
     path: "/admin",
     element: <AdminLayout />,

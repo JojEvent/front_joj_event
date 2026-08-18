@@ -1,14 +1,5 @@
-import React from 'react'
-import Header from './composants/header'
-import Footer from './composants/footer'
+import { Navigate } from "react-router-dom";
 
-const App = () => {
-  return (
-    <div>
-      <Header />
-      <Footer />
-    </div>
-  )
-}
+const App = () => <Navigate to="/profil" replace />;
 
-export default App
+export default App;
