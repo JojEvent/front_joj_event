@@ -1,5 +1,7 @@
-import { Navigate } from "react-router-dom";
+import Acceuil from "./pages/acceuil.jsx";
 
-const App = () => <Navigate to="/profil" replace />;
+const App = () => {
+  return <Acceuil />;
+};
 
 export default App;

@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import Icon from "../composants/Icon";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
-import { billetApi, evenementApi, favorisApi, userApi } from "../services/api";
+import { userApi, billetApi, favorisApi } from "../services/profile.service";
+import { getEventById } from "../services/events.service";
+
+const evenementApi = { getById: getEventById };
 
 const CalendarDays = (props) => <Icon name="CalendarDays" {...props} />;
 const Check = (props) => <Icon name="Check" {...props} />;

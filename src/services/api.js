@@ -1,16 +1,19 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/";
 
-const api = axios.create({
+export const instanceApi = axios.create({
   baseURL: API_BASE_URL,
   headers: {
+    "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
 
+export const instance = instanceApi;
+
 const getAccessToken = () => {
-  const directToken = localStorage.getItem("access_token");
+  const directToken = localStorage.getItem("accessToken") || localStorage.getItem("access_token");
   if (directToken) return directToken;
 
   const authToken = localStorage.getItem("token");
@@ -29,33 +32,15 @@ const getAccessToken = () => {
   return null;
 };
 
-api.interceptors.request.use((config) => {
-  const token = getAccessToken();
+instanceApi.interceptors.request.use(
+  (config) => {
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-
-export const userApi = {
-  getProfile: () => api.get("/user/profile/"),
-  updateProfile: (payload) => api.patch("/user/profile/update/", payload),
-};
-
-export const billetApi = {
-  getByUser: (userId) =>
-    api.get("/billets/", { params: { utilisateur: userId } }),
-};
-
-export const evenementApi = {
-  getById: (id) => api.get(`/evenements/${id}/`),
-};
-
-export const favorisApi = {
-  getMine: () => api.get("/favoris/"),
-  remove: (id) => api.delete(`/favoris/${id}/`),
-};
-
-export default api;
+export default instanceApi;
