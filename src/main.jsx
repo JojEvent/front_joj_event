@@ -32,6 +32,8 @@ import EvenementAdmin from "./pages/admin/evenement.jsx";
 import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
+import Login from "./pages/admin/login.jsx";
+import ProtetedAdminRoute from "./pages/admin/protectedAdminRoute.jsx";
 
 const queryClient = new QueryClient();
 
@@ -55,9 +57,14 @@ const router = createBrowserRouter([
       { path: "/resultats", element: <PageResultats /> },
       { path: "/panier", element: <CartPage /> },
       { path: "/profil", element: <ProfilePage /> },
+      { path: "/admin/login", element: <Login /> },
       {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+          <ProtetedAdminRoute>
+            <AdminLayout />
+          </ProtetedAdminRoute>
+        ),
         children: [
           { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
