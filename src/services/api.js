@@ -8,6 +8,8 @@ export const instanceApi = axios.create({
   },
 });
 
+export const instance = instanceApi;
+
 instanceApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -18,6 +20,9 @@ instanceApi.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+export default instanceApi;
+
 
 
 
