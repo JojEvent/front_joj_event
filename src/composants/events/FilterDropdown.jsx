@@ -6,6 +6,8 @@ import { ChevronDown } from "lucide-react";
 
 export default function FilterDropdown({ label, options, value, onChange }) {
   const [open, setOpen] = useState(false);
+  // utilise l'opérateur ??, appelé nullish coalescing operator
+  //signifie, Si value existe, utilise value, sinon utilise options[0]
   const current = value ?? options[0];
 
   return (

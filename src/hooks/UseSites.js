@@ -16,6 +16,9 @@ export function useSites() {
       setError(null);
 
       try {
+        //avec Promise.all(), les deux requêtes sont lancées en parallèle
+        //Promise.all() retourne un tableau dans le même ordre que les promesses que tu lui donnes.
+        //on utilise la déstructuration de tableau (array destructuring).
         const [disciplinesData, infrastructuresData] = await Promise.all([
           getDisciplines(),
           getInfrastructures(),

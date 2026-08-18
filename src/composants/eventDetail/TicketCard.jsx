@@ -14,6 +14,7 @@ export default function TicketCard({ event, onAddToCart }) {
 
   // Types de billets disponibles
   const typesBillets = [
+    //Un Set est une structure JavaScript qui ne garde qu'une seule occurrence de chaque valeur.
     ...new Set(
       billetsDisponibles.map((billet) => billet.type_billet)
     ),

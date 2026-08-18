@@ -31,12 +31,14 @@ export default function SearchFilters({ resultCount, onSearch, dateOptions }) {
   const [date, setDate] = useState(dateOptions[0]);
   //const [prix, setPrix] = useState(priceOptions[0]);
 
-  // Filtres actifs affichés en chips
+  //Garde v seulement si v existe ET que v n'est pas "Tous les sports" ET que v n'est pas "Tous les sites"
   const activeFilters = [sport, lieu].filter(
     (v) => v && v !== "Tous les sports" && v !== "Tous les sites"
   );
 
   const handleSearch = () => {
+    //?. : ce qu'on appelle l'optional chaining
+    // cela signifie : Si onSearch existe, appelle-le. Sinon, ne fais rien.
     onSearch?.({
       sport,
       lieu,

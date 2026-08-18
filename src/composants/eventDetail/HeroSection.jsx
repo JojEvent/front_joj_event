@@ -1,4 +1,4 @@
-// composants/eventDetail/HeroSection.jsx
+import { formatEventDate } from "../../utils/formatDate";
 import { MapPin, Calendar, Clock, Share2 } from "lucide-react";
 import MetaItem from "./MetaItem";
 
@@ -26,8 +26,8 @@ export default function HeroSection({ event }) {
 
         <div className="flex justify-start items-start gap-12">
           <MetaItem icon={MapPin} label="Lieu" value={event.infrastructure.nom} />
-          <MetaItem icon={Calendar} label="Date" value={event.date_debut} bordered />
-          <MetaItem icon={Clock} label="Début" value={event.date_debut} bordered />
+          <MetaItem icon={Calendar} label="Date" value={formatEventDate(event.date_debut)} bordered />
+          <MetaItem icon={Clock} label="Début" value={formatEventDate(event.date_debut)} bordered />
         </div>
       </div>
 

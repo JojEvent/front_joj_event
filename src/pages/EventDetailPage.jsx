@@ -15,7 +15,6 @@ export default function EventDetailPage() {
   const { data, isLoading, isError } = useEventById(id);
   console.log("je suis la",data);
   const { events } = useEvents();
-
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -54,7 +53,7 @@ export default function EventDetailPage() {
             <AboutSection event={data} />
             <ScheduleSection schedule={data.programmes} />
             <VenueMapSection
-                location={data.location}
+                location={data.infrastructure.nom}
                 latitude={14.7167}
                 longitude={-17.1961}
                 onDiscoverMap={() => console.log("Ouvrir la carte complète")}

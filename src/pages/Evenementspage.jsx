@@ -8,6 +8,8 @@ import { useEvents } from "../hooks/Usevents";
 
 export default function EvenementsPage() {
   const { events, isLoading, error, refetch } = useEvents();
+  console.log("je suis la", events);
+  
   const [currentPage, setCurrentPage] = useState(1);
  // Filtres sélectionnés par l'utilisateur
   const [filters, setFilters] = useState({

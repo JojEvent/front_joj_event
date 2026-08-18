@@ -2,8 +2,9 @@ import { instance } from "./api";
 
 const EVENTS_ENDPOINT = "api/evenements/";
 
-export async function getEvents(filters = {}) {
-  const { data } = await instance.get(EVENTS_ENDPOINT, { params: filters });
+export async function getEvents() {
+  const { data } = await instance.get(EVENTS_ENDPOINT);
+  console.log("RÉPONSE API EVENTS :", data);
   return data;
 }
 

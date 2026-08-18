@@ -5,20 +5,18 @@ import { getEvents } from "../services/events.service";
 // sert à adapter les données du backend au format dont ton frontend a besoin.
 import { mapEventsFromApi } from "../utils/eventsAdapter";
 
-export function useEvents(initialFilters = {}) {
+export function useEvents() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeFilters, setActiveFilters] = useState(initialFilters);
 
   // récupérer les événements du backend.
   // React garde cette fonction tant que activeFilters ne change pas.
-  const fetchEvents = useCallback(async (filters = activeFilters) => {
+  const fetchEvents = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    setActiveFilters(filters);
     try {
-      const data = await getEvents(filters);
+      const data = await getEvents();
       const rawEvents = Array.isArray(data) ? data : data.results ?? [];
       setEvents(mapEventsFromApi(rawEvents));
     } catch (err) {
@@ -28,10 +26,10 @@ export function useEvents(initialFilters = {}) {
     }
     // on dit  react garde la même fonction fetchEvents tant que activeFilters ne change pas
     // Si activeFilters change, crée une nouvelle version de fetchEvents
-  }, [activeFilters]);
+  }, []);
 
   useEffect(() => {
-    fetchEvents(initialFilters);
+    fetchEvents();
   }, []);
 
   return { events, isLoading, error, refetch: fetchEvents };
