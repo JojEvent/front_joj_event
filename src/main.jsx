@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "leaflet/dist/leaflet.css";
 
 import AdminLayout from "./pages/admin/layout.jsx";
 import DashboardAdmin from "./pages/admin/dashboard.jsx";
@@ -10,9 +11,17 @@ import EvenementAdmin from "./pages/admin/evenement.jsx";
 import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
+import EventDetailPage from "./pages/EventDetailPage.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
+  {
+    path: "/evenements/:id",
+    element: <EventDetailPage />,
+  },
   {
     path: "/admin",
     element: <AdminLayout />,
@@ -28,6 +37,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>,
 );
