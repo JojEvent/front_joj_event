@@ -1,36 +1,50 @@
 import axios from "axios";
 
-// Configuration de l'instance Axios principale
-export const instance = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/";
+
+export const instanceApi = axios.create({
+  baseURL: API_BASE_URL,
   headers: {
     Accept: "application/json",
   },
 });
 
-// Configuration pour les requêtes multipart (upload de fichiers)
-export const multipartInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
-  headers: {
-    Accept: "application/json",
-  },
-});
+export const instance = instanceApi;
+export const multipartInstance = instanceApi;
 
-// Intercepteur pour ajouter le token JWT à toutes les requêtes
-export const setupAxiosInterceptors = () => {
-  instance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  }, (error) => Promise.reject(error));
+const getAccessToken = () => {
+  const directToken = localStorage.getItem("accessToken") || localStorage.getItem("access_token");
+  if (directToken) return directToken;
 
-  multipartInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  const authToken = localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (authToken) return authToken;
+
+  const tokens = localStorage.getItem("tokens");
+  if (tokens) {
+    try {
+      const parsed = JSON.parse(tokens);
+      return parsed?.access || parsed?.access_token || null;
+    } catch {
+      return null;
     }
-    return config;
-  }, (error) => Promise.reject(error));
+  }
+
+  return null;
 };
+
+instanceApi.interceptors.request.use(
+  (config) => {
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export const setupAxiosInterceptors = () => {
+  // Configured automatically via interceptors above
+};
+
+export default instanceApi;

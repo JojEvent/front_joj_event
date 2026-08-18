@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
-import { instance } from "../services/api";
+import articlesService from "../services/articles.service";
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -15,16 +15,18 @@ export default function ArticleDetail() {
     const fetchData = async () => {
       try {
         // Charger l'article
-        const articleResponse = await instance.get(`/api/articles/${id}/`);
-        setArticle(articleResponse.data);
+        const articleData = await articlesService.getArticleById(id);
+        setArticle(articleData);
 
-        // Charger les articles liés (même discipline, autres articles publiés)
-        const relatedResponse = await instance.get(
-          `/api/articles/?statut=PUBLIE&discipline=${articleResponse.data.discipline?.id}&limit=3`
-        );
-        // Filtrer pour exclure l'article actuel
+        // Charger les articles liés
+        const relatedData = await articlesService.getArticles({
+          statut: "PUBLIE",
+          discipline: articleData.discipline?.id,
+          limit: 3,
+        });
+        
         setRelatedArticles(
-          relatedResponse.data.filter((a) => a.id !== articleResponse.data.id).slice(0, 3)
+          (Array.isArray(relatedData) ? relatedData : []).filter((a) => a.id !== articleData.id).slice(0, 3)
         );
         setIsLoading(false);
       } catch (err) {

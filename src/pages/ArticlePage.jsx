@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
-import { instance } from "../services/api";
+import articlesService from "../services/articles.service";
 
 export default function ArticlePage() {
   const [articles, setArticles] = useState([]);
@@ -13,13 +13,9 @@ export default function ArticlePage() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await instance.get("/api/articles/?statut=PUBLIE");
-        const data = response.data;
-        
-        if (data.length > 0) {
-          // Le premier article est l'article principal (featured)
+        const data = await articlesService.getArticles({ statut: "PUBLIE" });
+        if (Array.isArray(data) && data.length > 0) {
           setFeaturedArticle(data[0]);
-          // Les autres sont pour la section Journal Olympique
           setArticles(data.slice(1, 4));
         }
         setIsLoading(false);

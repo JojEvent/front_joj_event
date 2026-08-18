@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
-import { instance, multipartInstance } from "../services/api";
+import articlesService from "../services/articles.service";
 import { UploadCloud, Loader2 } from "lucide-react";
 
 export default function EspaceRedaction() {
@@ -24,8 +24,8 @@ export default function EspaceRedaction() {
   useEffect(() => {
     const fetchDisciplines = async () => {
       try {
-        const response = await instance.get("/api/disciplines/");
-        setDisciplines(response.data);
+        const data = await articlesService.getDisciplines();
+        setDisciplines(data);
       } catch (err) {
         console.error("Erreur lors du chargement des disciplines :", err);
       }
@@ -62,7 +62,7 @@ export default function EspaceRedaction() {
         payload.append("image_principale", image);
       }
 
-      const response = await multipartInstance.post("/api/articles/", payload);
+      await articlesService.createArticle(payload);
       
       setSuccess(
         actionType === "publish"

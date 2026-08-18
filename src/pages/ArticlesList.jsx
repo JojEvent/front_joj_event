@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
-import { instance } from "../services/api";
+import articlesService from "../services/articles.service";
 
 export default function ArticlesList() {
   const [articles, setArticles] = useState([]);
@@ -12,8 +12,8 @@ export default function ArticlesList() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await instance.get("/api/articles/?statut=PUBLIE");
-        setArticles(response.data);
+        const data = await articlesService.getArticles({ statut: "PUBLIE" });
+        setArticles(data);
         setIsLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement des articles :", err);

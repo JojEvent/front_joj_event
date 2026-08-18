@@ -120,7 +120,9 @@ const Footer = () => {
                     <div className="size-5 relative overflow-hidden">
                       <img src={MailIcon} alt="MailIcon" />
                     </div>
-                    <div className="flex-1 justify-start text-neutral-600 text-sm font-normal font-olympic line-clamp-1">
+         {/* ======================================================
+    SECTION 3 : ÉVÉNEMENTS
+    ====================================================== */}            <div className="flex-1 justify-start text-neutral-600 text-sm font-normal font-olympic line-clamp-1">
                       Entrez votre adresse e-mail
                     </div>
                   </div>
