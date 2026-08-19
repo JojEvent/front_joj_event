@@ -16,6 +16,13 @@ import EvenementsPage from "./pages/Evenementspage.jsx";
 import EventDetailPage from "./pages/EventDetailPage.jsx";
 import PageResultats from "./pages/resultats.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import ProfilePage from "./pages/profile.jsx";
+
+// Pages Articles & Rédaction
+import EspaceRedaction from "./pages/EspaceRedaction.jsx";
+import ArticlePage from "./pages/ArticlePage.jsx";
+import ArticlesList from "./pages/ArticlesList.jsx";
+import ArticleDetail from "./pages/ArticleDetail.jsx";
 
 // Pages Auth
 import LoginAuth from "./pages/auth/loginAuth.jsx";
@@ -56,10 +63,20 @@ const router = createBrowserRouter([
       { path: "/resultat", element: <PageResultats /> },
       { path: "/resultats", element: <PageResultats /> },
       { path: "/panier", element: <CartPage /> },
+      { path: "/profil", element: <ProfilePage /> },
+
+      // Routes Articles et Rédaction
+      { path: "/redaction", element: <EspaceRedaction /> },
+      { path: "/articles", element: <ArticlesList /> },
+      { path: "/articles/:id", element: <ArticleDetail /> },
+      { path: "/article", element: <ArticlePage /> },
+
+      // Routes Admin
       {
         path: "/admin",
         element: <AdminLayout />,
         children: [
+          { index: true, element: <DashboardAdmin /> },
           { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
           { path: "siteOlympique", element: <SiteOlympiqueAdmin /> },
@@ -67,6 +84,8 @@ const router = createBrowserRouter([
           { path: "userGestion", element: <UserGestionAdmin /> },
         ],
       },
+
+      // Routes Auth
       {
         path: "/auth",
         children: [
