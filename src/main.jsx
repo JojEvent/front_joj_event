@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 
@@ -66,6 +66,7 @@ const router = createBrowserRouter([
           </ProtetedAdminRoute>
         ),
         children: [
+          { index: true, element: <Navigate to="dashboard" replace /> },
           { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
           { path: "siteOlympique", element: <SiteOlympiqueAdmin /> },
