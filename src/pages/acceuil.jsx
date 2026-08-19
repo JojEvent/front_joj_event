@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
@@ -23,6 +24,7 @@ import article1 from "../assets/article1.png";
 import article2 from "../assets/article2.png";
 import article3 from "../assets/article3.png";
 import article4 from "../assets/article4.png";
+import Assistant from "../composants/assistant/Assistant";
 
 // Icônes billetterie : placeholders Figma (63x50, 63x47, 64x48)
 const ticketSteps = [
@@ -119,6 +121,15 @@ const FlagSenegal = () => (
 const Acceuil = () => {
   const navigate = useNavigate();
   const { events: apiEvents, isLoading: isEventsLoading } = useEvents();
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+
+  const handleClick= ()=>{
+    setIsAssistantOpen(true);
+  }
+
+  const onClose=()=>{
+    setIsAssistantOpen(false)
+  }
 
   return (
     <div className="w-full bg-white">
@@ -180,7 +191,7 @@ const Acceuil = () => {
             <div className="relative w-full lg:flex-1 min-h-[400px] lg:min-h-[581px] mt-8 lg:mt-0 overflow-visible">
 
               {/* 1. Monument en arrière-plan */}
-             <img
+              <img 
                 className="absolute left-1/2 lg:left-[-80px] top-[-80px] lg:top-[-177px] -translate-x-1/2 lg:translate-x-0 w-[600px] lg:w-[993px] h-auto lg:h-[732px] opacity-[500] mix-blend-luminosity object-contain pointer-events-none z-0"
                 src={MonumentBg}
                 alt="Monument de l'African Renaissance en arrière-plan"
@@ -199,12 +210,32 @@ const Acceuil = () => {
                 alt="Athlète en action"
               />
 
-              {/* 4. Petite mascotte en bas à droite */}
-              <img
-                className="fixed right-4 bottom-4 w-32 sm:w-48 lg:bottom-8 lg:right-8 lg:w-64 lg:h-52 object-contain z-30 hidden sm:block pointer-events-none"
-                src={assistant}
-                alt="Mascotte JOJ"
-              />
+              <div className="fixed right-4 sm:right-6 sm:bottom-6 lg:right-8 lg:bottom-8 z-50 ">
+                {isAssistantOpen && (
+                  <>
+                    {/* Overlay grisé sur toute la page */}
+                    <div
+                      className="fixed inset-0 bg-black/40 z-40"
+                      onClick={onClose}
+                    />
+
+                    <div className="absolute  bottom-full right-0 mb-4 z-50">
+                      <Assistant onClose={onClose} />
+                    </div>
+                  </>
+                )}
+
+                {/* 4. Petite mascotte en bas à droite */}
+                {!isAssistantOpen && (
+                <img
+                  className="cursor-pointer fixed right-4 bottom-4 w-32 sm:w-48 lg:bottom-8 lg:right-8 lg:w-64 lg:h-52 object-contain z-30 hidden sm:block"
+                  src={assistant}
+                  alt="Mascotte JOJ"
+                  onClick={handleClick}
+                />
+                )}
+
+              </div>
             </div>
           </div>
 
