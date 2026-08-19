@@ -85,7 +85,7 @@ const Header = () => {
                   {/* Badge uniquement sur l'icône panier */}
                     {item.path === "/panier" && items.length > 0 && (
                       <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                        {items.length}
+                        {items.reduce((acc, current) => acc + (current.quantity || 1), 0)}
                       </span>
                     )}
                 </div>
