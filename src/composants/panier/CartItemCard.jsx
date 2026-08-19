@@ -1,4 +1,3 @@
-// components/domain/panier/CartItemCard.jsx
 import React from "react";
 
 function formatFcfa(amount) {
@@ -27,22 +26,22 @@ export default function CartItemCard({ item, onEdit, onDelete }) {
           <p className="text-neutral-600 text-base font-medium font-['Inter'] line-clamp-1">
             {item.dateLabel} . {item.ticketType}
           </p>
-          <p className="text-neutral-800 text-base font-normal font-['Inter'] line-clamp-1">
+          {/*<p className="text-neutral-800 text-base font-normal font-['Inter'] line-clamp-1">
             {item.seatInfo}
-          </p>
+          </p>*/}
           <p className="text-neutral-800 text-base font-bold font-['Olympic_Headline']">
             prix {formatFcfa(item.unitPrice)}
           </p>
         </div>
 
         <div className="flex flex-col justify-between items-center gap-6">
-          <button
+          {/*<button
             type="button"
             onClick={() => onEdit?.(item.id)}
             className="flex items-center gap-2 text-slate-900 text-base font-medium font-['Inter']"
           >
             Modifier
-          </button>
+          </button>*/}
           <button
             type="button"
             onClick={() => onDelete?.(item.id)}

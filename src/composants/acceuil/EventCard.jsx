@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
+import { useAuth } from "../../context/authContext";
+import { toggleFavorite } from "../../services/events.service";
 
-// Carte événement
+/**
+ * Composant EventCard (Accueil)
+ * Affiche une carte d'événement avec le bouton favori conditionné par la connexion de l'utilisateur.
+ */
 const EventCard = ({
   id = 1,
   title,
@@ -11,13 +16,33 @@ const EventCard = ({
   price,
   image,
   tags = [],
+  isFavoriteInitial = false,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  // Récupérer le statut de connexion de l'utilisateur depuis le contexte Auth
+  const { isAuthenticated } = useAuth();
+  
+  // État local pour le cœur favori
+  const [isFavorite, setIsFavorite] = useState(isFavoriteInitial);
   const navigate = useNavigate();
 
-  const handleFavorite = (e) => {
+  // Gestion du clic sur le cœur favori
+  const handleFavorite = async (e) => {
     e.stopPropagation();
-    setIsFavorite((prev) => !prev);
+
+    // Si l'utilisateur n'est pas connecté, on ne fait rien (ou redirection)
+    if (!isAuthenticated) return;
+
+    // Basculer l'état visuel du cœur immédiatement pour une réponse fluide
+    setIsFavorite(!isFavorite);
+
+    // Appeler dynamiquement l'API Backend pour enregistrer le favori
+    try {
+      await toggleFavorite(id);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des favoris via l'API:", error);
+      // Revenir à l'ancien état en cas d'erreur
+      setIsFavorite(isFavorite);
+    }
   };
 
   const handleCardClick = () => {
@@ -63,41 +88,43 @@ const EventCard = ({
             {title}
           </h3>
 
-          {/* Bouton favoris */}
-          <button
-            type="button"
-            onClick={handleFavorite}
-            aria-label={
-              isFavorite
-                ? "Retirer des favoris"
-                : "Ajouter aux favoris"
-            }
-            aria-pressed={isFavorite}
-            className={`
-              w-9 h-9 shrink-0
-              rounded-full
-              flex items-center justify-center
-              border
-              transition-all duration-200
-              hover:scale-105
-              active:scale-95
-              ${
+          {/* Bouton favoris (Affiché uniquement si l'utilisateur est connecté) */}
+          {isAuthenticated && (
+            <button
+              type="button"
+              onClick={handleFavorite}
+              aria-label={
                 isFavorite
-                  ? "bg-red-50 border-red-200"
-                  : "bg-white border-slate-200 hover:bg-slate-50"
+                  ? "Retirer des favoris"
+                  : "Ajouter aux favoris"
               }
-            `}
-          >
-            <Heart
-              size={18}
-              strokeWidth={2}
-              className={
-                isFavorite
-                  ? "text-red-600 fill-red-600"
-                  : "text-zinc-900"
-              }
-            />
-          </button>
+              aria-pressed={isFavorite}
+              className={`
+                w-9 h-9 shrink-0
+                rounded-full
+                flex items-center justify-center
+                border
+                transition-all duration-200
+                hover:scale-105
+                active:scale-95
+                ${
+                  isFavorite
+                    ? "bg-red-50 border-red-200"
+                    : "bg-white border-slate-200 hover:bg-slate-50"
+                }
+              `}
+            >
+              <Heart
+                size={18}
+                strokeWidth={2}
+                className={
+                  isFavorite
+                    ? "text-red-600 fill-red-600"
+                    : "text-zinc-900"
+                }
+              />
+            </button>
+          )}
         </div>
 
         {/* Date */}

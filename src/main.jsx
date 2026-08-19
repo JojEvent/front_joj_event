@@ -1,6 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Outlet, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 
@@ -16,7 +21,16 @@ import EvenementsPage from "./pages/Evenementspage.jsx";
 import EventDetailPage from "./pages/EventDetailPage.jsx";
 import PageResultats from "./pages/resultats.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import PaiementPage from "./pages/PaiementPage.jsx";
+import SuccesPage from "./pages/SuccesPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
+import Favoris from "./pages/favoris.jsx";
+
+// Pages Articles & Rédaction
+import EspaceRedaction from "./pages/EspaceRedaction.jsx";
+import ArticlePage from "./pages/ArticlePage.jsx";
+import ArticlesList from "./pages/ArticlesList.jsx";
+import ArticleDetail from "./pages/ArticleDetail.jsx";
 
 // Pages Auth
 import LoginAuth from "./pages/auth/loginAuth.jsx";
@@ -32,16 +46,21 @@ import EvenementAdmin from "./pages/admin/evenement.jsx";
 import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
+
 import Login from "./pages/admin/login.jsx";
 import ProtetedAdminRoute from "./pages/admin/protectedAdminRoute.jsx";
+
+import { CartProvider } from "./context/CartContext.jsx";
 
 const queryClient = new QueryClient();
 
 // Composant racine avec AuthProvider et ToastContainer
 const Root = () => (
   <AuthProvider>
-    <Outlet />
-    <ToastContainer position="top-right" autoClose={4000} />
+    <CartProvider>
+      <Outlet />
+      <ToastContainer position="top-right" autoClose={4000} />
+    </CartProvider>
   </AuthProvider>
 );
 
@@ -56,8 +75,22 @@ const router = createBrowserRouter([
       { path: "/resultat", element: <PageResultats /> },
       { path: "/resultats", element: <PageResultats /> },
       { path: "/panier", element: <CartPage /> },
+      { path: "/paiement", element: <PaiementPage /> },
+      { path: "/succes", element: <SuccesPage /> },
       { path: "/profil", element: <ProfilePage /> },
+
       { path: "/admin/login", element: <Login /> },
+      { path: "/favoris", element: <Favoris /> },
+      { path: "/souhaits", element: <Favoris /> },
+
+      // Routes Articles et Rédaction
+      { path: "/redaction", element: <EspaceRedaction /> },
+      { path: "/articles", element: <ArticlesList /> },
+      { path: "/articles/:id", element: <ArticleDetail /> },
+      { path: "/article", element: <ArticlePage /> },
+
+      // Routes Admin
+
       {
         path: "/admin",
         element: (
@@ -67,6 +100,7 @@ const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
+          { index: true, element: <DashboardAdmin /> },
           { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
           { path: "siteOlympique", element: <SiteOlympiqueAdmin /> },
@@ -74,6 +108,8 @@ const router = createBrowserRouter([
           { path: "userGestion", element: <UserGestionAdmin /> },
         ],
       },
+
+      // Routes Auth
       {
         path: "/auth",
         children: [
@@ -94,5 +130,5 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );
