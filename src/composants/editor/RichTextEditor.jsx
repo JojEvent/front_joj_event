@@ -1,5 +1,5 @@
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 // Configuration des formats et modules Quill
 const modules = {
@@ -11,6 +11,9 @@ const modules = {
       [{ 'list': 'bullet' }],
       ['code'],
     ],
+  },
+  clipboard: {
+    matchers: [],
   },
 };
 
@@ -110,6 +113,18 @@ const QuillStyles = () => (
     }
     .rich-text-editor .ql-snow .ql-picker-label::before {
       font-family: "Olympic_sans", sans-serif;
+    }
+    .rich-text-editor .ql-snow .ql-stroke {
+      stroke: #1f2937;
+    }
+    .rich-text-editor .ql-snow .ql-fill {
+      fill: #1f2937;
+    }
+    .rich-text-editor .ql-snow .ql-active .ql-stroke {
+      stroke: #0284c7;
+    }
+    .rich-text-editor .ql-snow .ql-active .ql-fill {
+      fill: #0284c7;
     }
   `}</style>
 );
