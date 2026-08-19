@@ -20,6 +20,7 @@ import PaiementPage from "./pages/PaiementPage.jsx";
 import SuccesPage from "./pages/SuccesPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
 import Favoris from "./pages/favoris.jsx";
+import MesBilletsPage from "./pages/MesBilletsPage.jsx";
 
 // Pages Articles & Rédaction
 import EspaceRedaction from "./pages/EspaceRedaction.jsx";
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
       { path: "/profil", element: <ProfilePage /> },
       { path: "/favoris", element: <Favoris /> },
       { path: "/souhaits", element: <Favoris /> },
+      { path: "/billets", element: <MesBilletsPage /> },
 
       // Routes Articles et Rédaction
       { path: "/redaction", element: <EspaceRedaction /> },
