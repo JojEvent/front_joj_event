@@ -66,7 +66,7 @@ const Header = () => {
               {[
                 { icon: BellIcon, path: null },
                 { icon: PanierIcon, path: "/panier" },
-                { icon: LikeIcon, path: "/profil" },
+                { icon: LikeIcon, path: "/favoris" },
                 { icon: ProfilIcon, path: "/profil" },
               ].map((item, index) => (
                 <div
@@ -86,6 +86,13 @@ const Header = () => {
             </div>
           ) : (
             <div className="flex items-center gap-3">
+              <Link
+                to="/favoris"
+                className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
+                title="Mes favoris"
+              >
+                <img src={LikeIcon} alt="Favoris" className="w-4 h-4" />
+              </Link>
               <Link
                 to="/profil"
                 className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"

@@ -17,6 +17,7 @@ import EventDetailPage from "./pages/EventDetailPage.jsx";
 import PageResultats from "./pages/resultats.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
+import Favoris from "./pages/favoris.jsx";
 
 // Pages Articles & Rédaction
 import EspaceRedaction from "./pages/EspaceRedaction.jsx";
@@ -64,6 +65,8 @@ const router = createBrowserRouter([
       { path: "/resultats", element: <PageResultats /> },
       { path: "/panier", element: <CartPage /> },
       { path: "/profil", element: <ProfilePage /> },
+      { path: "/favoris", element: <Favoris /> },
+      { path: "/souhaits", element: <Favoris /> },
 
       // Routes Articles et Rédaction
       { path: "/redaction", element: <EspaceRedaction /> },
