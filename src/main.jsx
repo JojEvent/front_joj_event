@@ -19,6 +19,13 @@ import CartPage from "./pages/CartPage.jsx";
 import PaiementPage from "./pages/PaiementPage.jsx";
 import SuccesPage from "./pages/SuccesPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
+import Favoris from "./pages/favoris.jsx";
+
+// Pages Articles & Rédaction
+import EspaceRedaction from "./pages/EspaceRedaction.jsx";
+import ArticlePage from "./pages/ArticlePage.jsx";
+import ArticlesList from "./pages/ArticlesList.jsx";
+import ArticleDetail from "./pages/ArticleDetail.jsx";
 
 // Pages Auth
 import LoginAuth from "./pages/auth/loginAuth.jsx";
@@ -34,14 +41,17 @@ import EvenementAdmin from "./pages/admin/evenement.jsx";
 import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 
 const queryClient = new QueryClient();
 
 // Composant racine avec AuthProvider et ToastContainer
 const Root = () => (
   <AuthProvider>
+    <CartProvider>
     <Outlet />
     <ToastContainer position="top-right" autoClose={4000} />
+    </CartProvider>
   </AuthProvider>
 );
 
@@ -59,10 +69,21 @@ const router = createBrowserRouter([
       { path: "/paiement", element: <PaiementPage /> },
       { path: "/succes", element: <SuccesPage /> },
       { path: "/profil", element: <ProfilePage /> },
+      { path: "/favoris", element: <Favoris /> },
+      { path: "/souhaits", element: <Favoris /> },
+
+      // Routes Articles et Rédaction
+      { path: "/redaction", element: <EspaceRedaction /> },
+      { path: "/articles", element: <ArticlesList /> },
+      { path: "/articles/:id", element: <ArticleDetail /> },
+      { path: "/article", element: <ArticlePage /> },
+
+      // Routes Admin
       {
         path: "/admin",
         element: <AdminLayout />,
         children: [
+          { index: true, element: <DashboardAdmin /> },
           { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
           { path: "siteOlympique", element: <SiteOlympiqueAdmin /> },
@@ -70,6 +91,8 @@ const router = createBrowserRouter([
           { path: "userGestion", element: <UserGestionAdmin /> },
         ],
       },
+
+      // Routes Auth
       {
         path: "/auth",
         children: [

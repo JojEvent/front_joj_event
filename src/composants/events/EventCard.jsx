@@ -3,9 +3,17 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 import Badge from "./Badge";
 import { toggleFavorite } from "../../services/events.service";
+import { useAuth } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Composant EventCard (Liste d'événements)
+ * L'icône favoris ne s'affiche QUE si l'utilisateur est connecté.
+ */
 export default function EventCard({ event }) {
+  // Récupérer le statut de connexion
+  const { isAuthenticated } = useAuth();
+
   const [isFavorite, setIsFavorite] = useState(event.isFavorite);
   const navigate = useNavigate();
 
@@ -13,13 +21,20 @@ export default function EventCard({ event }) {
     navigate(`/evenements/${event.id}`);
   };
   
-  const handleFavorite = async () => {
+  const handleFavorite = async (e) => {
+    if (e) e.stopPropagation();
+
+    // Si non connecté, ne rien faire
+    if (!isAuthenticated) return;
+
+    const nouveauStatut = !isFavorite;
+    setIsFavorite(nouveauStatut);
+
     try {
       await toggleFavorite(event.id);
-
-      setIsFavorite(true);
     } catch (error) {
-      console.error(error);
+      console.error("Erreur lors du toggle favori API:", error);
+      setIsFavorite(isFavorite); // Revenir en arrière en cas d'erreur
     }
   };
 
@@ -27,7 +42,7 @@ export default function EventCard({ event }) {
   return (
     <article className="w-96 flex flex-col justify-start items-start">
       <div className="self-stretch h-80 pb-6 flex flex-col justify-start items-start">
-        <div onClick={handleCardClick} className="self-stretch h-80 relative rounded-3xl flex flex-col justify-center items-start overflow-hidden">
+        <div onClick={handleCardClick} className="self-stretch h-80 relative rounded-3xl flex flex-col justify-center items-start overflow-hidden cursor-pointer">
           <img className="self-stretch flex-1 object-cover" src={event.image} alt={event.title} />
 
           {/* Tags sport / médaille, en haut à gauche */}
@@ -45,16 +60,19 @@ export default function EventCard({ event }) {
             {event.title}
           </h3>
 
-          <button
-            type="button"
-            onClick={handleFavorite}
-            aria-label="Ajouter aux favoris"
-            className="size-8 bg-white rounded-full border border-slate-200 flex items-center justify-center shrink-0"
-          >
-            <Heart
-              className={`size-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-zinc-950"}`}
-            />
-          </button>
+          {/* L'icône favori (cœur) s'affiche uniquement si l'utilisateur est connecté */}
+          {isAuthenticated && (
+            <button
+              type="button"
+              onClick={handleFavorite}
+              aria-label="Ajouter aux favoris"
+              className="size-8 bg-white rounded-full border border-slate-200 flex items-center justify-center shrink-0"
+            >
+              <Heart
+                className={`size-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-zinc-950"}`}
+              />
+            </button>
+          )}
         </div>
 
         <div className="self-stretch flex flex-col justify-start items-start">

@@ -10,8 +10,10 @@ import {
 import { useAuth } from "../context/authContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useCart } from "../context/CartContext";
 
 const Header = () => {
+  const { items } = useCart()
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const navLinks = ["Événements", "Carte", "Billets", "Résultat"];
@@ -64,20 +66,33 @@ const Header = () => {
               {[
                 { icon: BellIcon, path: null },
                 { icon: PanierIcon, path: "/panier" },
-                { icon: LikeIcon, path: "/profil" },
+                { icon: LikeIcon, path: "/favoris" },
                 { icon: ProfilIcon, path: "/profil" },
               ].map((item, index) => (
                 <div
                   key={index}
                   onClick={() => item.path && navigate(item.path)}
-                  className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
+                  className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors relative"
                 >
                   <img src={item.icon} alt="" className="w-4 h-4" />
+                  {/* Badge uniquement sur l'icône panier */}
+                    {item.path === "/panier" && items.length > 0 && (
+                      <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                        {items.length}
+                      </span>
+                    )}
                 </div>
               ))}
             </div>
           ) : (
             <div className="flex items-center gap-3">
+              <Link
+                to="/favoris"
+                className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
+                title="Mes favoris"
+              >
+                <img src={LikeIcon} alt="Favoris" className="w-4 h-4" />
+              </Link>
               <Link
                 to="/profil"
                 className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
