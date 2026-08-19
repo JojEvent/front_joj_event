@@ -31,14 +31,17 @@ import EvenementAdmin from "./pages/admin/evenement.jsx";
 import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 
 const queryClient = new QueryClient();
 
 // Composant racine avec AuthProvider et ToastContainer
 const Root = () => (
   <AuthProvider>
+    <CartProvider>
     <Outlet />
     <ToastContainer position="top-right" autoClose={4000} />
+    </CartProvider>
   </AuthProvider>
 );
 

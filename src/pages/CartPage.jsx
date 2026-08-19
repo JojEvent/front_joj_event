@@ -1,7 +1,3 @@
-// pages/CartPage.jsx
-import React, { useState } from "react";
-import Header from "../composants/header";
-import Footer from "../composants/footer";
 import CartStepper from "../composants/panier/CartStepper";
 import CartTimer from "../composants/panier/CartTimer";
 import CartItemCard from "../composants/panier/CartItemCard";
@@ -10,31 +6,42 @@ import {
   stepsMock,
   currentStepMock,
   reservationTimeLimitMock,
-  cartItemsMock,
 } from "../../mocks/panierMock";
+import { useCart } from "../context/CartContext";
 
+
+/**
+ * Page "Mon Panier" du tunnel de réservation JOJ Dakar 2026.
+ * Les articles viennent maintenant du CartContext (alimenté par TicketCard).
+ *
+ * TODO intégration backend_joj_event :
+ * - synchroniser addToCart/removeFromCart avec l'API (POST/DELETE /api/panier/items/)
+ * - onPay -> POST /api/reservations/{id}/paiement/ puis redirection étape 3
+ */
 export default function CartPage() {
-  const [items, setItems] = useState(cartItemsMock);
+  const { items, removeFromCart } = useCart();
 
   const handleEdit = (id) => {
+    // TODO: ouvrir la modale de modification de siège / type de billet
     console.log("Modifier l'article :", id);
   };
 
   const handleDelete = (id) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    removeFromCart(id);
   };
 
   const handleExpire = () => {
+    // TODO: libérer la réservation côté backend + rediriger vers l'étape 1
     console.log("Temps de réservation expiré");
   };
 
   const handlePay = () => {
+    // TODO: déclencher le paiement (étape 3)
     console.log("Paiement lancé pour", items.length, "article(s)");
   };
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col items-center gap-14 pt-8">
-      <Header />
 
       <CartStepper steps={stepsMock} currentStep={currentStepMock} />
 
@@ -70,7 +77,6 @@ export default function CartPage() {
         </section>
       )}
 
-      <Footer />
     </div>
   );
 }

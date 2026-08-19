@@ -27,7 +27,7 @@ export default function EventCard({ event }) {
   return (
     <article className="w-96 flex flex-col justify-start items-start">
       <div className="self-stretch h-80 pb-6 flex flex-col justify-start items-start">
-        <div onClick={handleCardClick} className="self-stretch h-80 relative rounded-3xl flex flex-col justify-center items-start overflow-hidden">
+        <div onClick={handleCardClick} className="self-stretch h-80 relative rounded-3xl flex flex-col justify-center items-start overflow-hidden cursor-pointer">
           <img className="self-stretch flex-1 object-cover" src={event.image} alt={event.title} />
 
           {/* Tags sport / médaille, en haut à gauche */}

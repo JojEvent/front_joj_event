@@ -1,8 +1,11 @@
 import { Users } from "lucide-react";
 import TicketTypeSelector from "./TicketTypeSelector";
 import { useEffect, useState } from "react";
+import { useCart } from "../../context/CartContext";
 
-export default function TicketCard({ event, onAddToCart }) {
+
+export default function TicketCard({ event }) {
+  const { addToCart } = useCart()
   const [typeSelectionne, setTypeSelectionne] = useState(null);
 
   const billets = event?.billets ?? [];
@@ -54,7 +57,7 @@ export default function TicketCard({ event, onAddToCart }) {
         <div className="flex flex-col gap-1">
 
           <span className="text-stone-500 text-sm font-bold uppercase">
-            Prix à partir de
+            Prix
           </span>
 
           <div className="flex items-baseline gap-1">
@@ -110,10 +113,10 @@ export default function TicketCard({ event, onAddToCart }) {
       {/* AJOUT AU PANIER */}
       <button
         type="button"
-        onClick={() => onAddToCart?.(billetsDuType)}
+        onClick={() => addToCart(event, billetsDuType)}
         className="self-stretch py-5 bg-blue-600 rounded-2xl shadow-[0px_10px_15px_-3px_rgba(0,85,164,0.30)] flex justify-center items-center"
       >
-        <span className="text-white text-xl font-bold uppercase">
+        <span className="text-white text-xl font-bold uppercase cursor-pointer">
           Ajouter au panier
         </span>
       </button>
