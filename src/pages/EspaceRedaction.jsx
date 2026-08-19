@@ -17,20 +17,24 @@ export default function EspaceRedaction() {
   const [image, setImage] = useState(null);
   const [disciplines, setDisciplines] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDisciplines, setIsLoadingDisciplines] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
   // Charger les disciplines depuis le backend
   useEffect(() => {
-    const fetchDisciplines = async () => {
-      try {
-        const data = await articlesService.getDisciplines();
-        setDisciplines(data);
-      } catch (err) {
-        console.error("Erreur lors du chargement des disciplines :", err);
-      }
-    };
-    fetchDisciplines();
+    // DONNÉES TEMPORAIRES POUR TEST - À REMPLACER PAR L'API PLUS TARD
+    const mockDisciplines = [
+      { id: 1, nom: "Athlétisme" },
+      { id: 2, nom: "Cycling" },
+      { id: 3, nom: "Football" },
+      { id: 4, nom: "Natation" },
+      { id: 5, nom: "Basketball" },
+      { id: 6, nom: "Lutte" },
+      { id: 7, nom: "Tennis" }
+    ];
+    setDisciplines(mockDisciplines);
+    setIsLoadingDisciplines(false);
   }, []);
 
   const handleChange = (e) => {
@@ -276,34 +280,38 @@ export default function EspaceRedaction() {
               <p className="text-sm text-gray-600 mb-4">
                 Sélectionnez le sport correspondant à cet article.
               </p>
-              <div className="flex flex-wrap gap-2">
-                {["Athlétisme", "Cycling", "Football", "Natation", "Basketball", "Lutte", "Tennis"].map((sport) => {
-                  const discipline = disciplines.find(d => d.nom === sport);
-                  const isSelected = formData.discipline === discipline?.id;
-                  
-                  return (
-                    <button
-                      key={sport}
-                      type="button"
-                      onClick={() => {
-                        if (discipline) {
+              {isLoadingDisciplines ? (
+                <p className="text-sm text-gray-500">Chargement des catégories...</p>
+              ) : disciplines.length === 0 ? (
+                <p className="text-sm text-gray-500">Aucune catégorie disponible. Vérifiez que le backend retourne des disciplines.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {disciplines.map((discipline) => {
+                    const isSelected = formData.discipline === discipline.id;
+                    
+                    return (
+                      <button
+                        key={discipline.id}
+                        type="button"
+                        onClick={() => {
                           setFormData((prev) => ({ 
                             ...prev, 
                             discipline: isSelected ? "" : discipline.id 
                           }));
-                        }
-                      }}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-sm ${
-                        isSelected
-                          ? "bg-blue-600 text-white shadow-lg ring-2 ring-blue-500 ring-offset-2"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
-                      }`}
-                    >
-                      {sport}
-                    </button>
-                  );
-                })}
-              </div>
+                        }}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-sm flex items-center gap-2 ${
+                          isSelected
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        {isSelected && <span className="w-2 h-2 bg-white rounded-full" />}
+                        {discipline.nom}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
