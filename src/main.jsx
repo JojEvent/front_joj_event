@@ -39,6 +39,7 @@ import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+import Assistant from "./composants/assistant/Assistant.jsx";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,8 @@ const router = createBrowserRouter([
       { path: "/articles", element: <ArticlesList /> },
       { path: "/articles/:id", element: <ArticleDetail /> },
       { path: "/article", element: <ArticlePage /> },
+
+      { path: "/assistant", element: <Assistant /> },
 
       // Routes Admin
       {
