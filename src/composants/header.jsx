@@ -23,7 +23,14 @@ const Header = () => {
       navigate("/resultat");
     } else if (link === "Événements") {
       navigate("/evenements");
-    } else if (link === "Billets" || link === "Carte") {
+    } else if (link === "Billets") {
+      if (!isAuthenticated) {
+        toast.info("Veuillez vous connecter pour consulter vos billets.");
+        navigate("/auth/login");
+      } else {
+        navigate("/billets");
+      }
+    } else if (link === "Carte") {
       navigate("/panier");
     } else {
       toast.info(`La page ${link} sera bientôt disponible !`);
