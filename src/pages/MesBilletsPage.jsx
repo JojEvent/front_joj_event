@@ -91,7 +91,11 @@ export default function MesBilletsPage() {
                   <div className="w-full sm:w-44 h-32 rounded-xl overflow-hidden bg-stone-100 shrink-0">
                     {billet.evenement_image ? (
                       <img
-                        src={billet.evenement_image}
+                        src={
+                          billet.evenement_image.startsWith("http")
+                            ? billet.evenement_image
+                            : `http://127.0.0.1:8000${billet.evenement_image}`
+                        }
                         alt={billet.evenement_titre || "Événement JOJ"}
                         className="w-full h-full object-cover"
                       />
@@ -150,13 +154,17 @@ export default function MesBilletsPage() {
                   </div>
                 </div>
 
-                {/* Section Droite : QR Code dynamique */}
-                <div className="shrink-0 flex flex-col items-center justify-center p-2 bg-stone-50 rounded-xl border border-stone-100">
+                {/* Section Droite : QR Code dynamique & Action */}
+                <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-stone-50 rounded-xl border border-stone-100 gap-2">
                   {billet.qr_code ? (
                     <img
-                      src={billet.qr_code}
+                      src={
+                        billet.qr_code.startsWith("http")
+                          ? billet.qr_code
+                          : `http://127.0.0.1:8000${billet.qr_code}`
+                      }
                       alt="QR Code Billet"
-                      className="w-24 h-24 lg:w-28 lg:w-28 object-contain"
+                      className="w-24 h-24 lg:w-28 lg:h-28 object-contain bg-white p-1 rounded-lg shadow-sm"
                     />
                   ) : (
                     <div className="w-24 h-24 lg:w-28 lg:h-28 flex flex-col items-center justify-center text-xs text-stone-400 text-center p-2 border border-dashed border-stone-300 rounded-lg">
@@ -164,9 +172,15 @@ export default function MesBilletsPage() {
                       QR Code indisponible
                     </div>
                   )}
-                  <span className="text-[10px] text-stone-400 font-mono mt-1">
+                  <span className="text-[10px] text-stone-500 font-mono">
                     #{billet.code_unique ? billet.code_unique.slice(0, 8) : billet.id}
                   </span>
+                  <button
+                    onClick={() => window.print()}
+                    className="w-full mt-1 px-3 py-1.5 bg-neutral-900 hover:bg-black text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1"
+                  >
+                    Imprimer / PDF
+                  </button>
                 </div>
               </div>
             ))}
