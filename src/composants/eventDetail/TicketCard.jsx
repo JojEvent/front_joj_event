@@ -1,50 +1,46 @@
 import { Users } from "lucide-react";
 import TicketTypeSelector from "./TicketTypeSelector";
 import { useEffect, useState } from "react";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
-export default function TicketCard({ event, onAddToCart }) {
+
+export default function TicketCard({ event }) {
+  const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [typeSelectionne, setTypeSelectionne] = useState(null);
 
-  const billets = event?.billets ?? [];
+  const typesBillets = ["STANDARD", "VIP"];
 
-  // Billets disponibles uniquement
-  const billetsDisponibles = billets.filter(
-    (billet) => billet.statut === "VALIDE"
-  );
-
-  // Types de billets disponibles
-  const typesBillets = [
-    //Un Set est une structure JavaScript qui ne garde qu'une seule occurrence de chaque valeur.
-    ...new Set(
-      billetsDisponibles.map((billet) => billet.type_billet)
-    ),
-  ];
-
-  // Sélectionner automatiquement le premier type
-  // lorsque les billets sont chargés
   useEffect(() => {
-    if (typesBillets.length > 0 && !typeSelectionne) {
-      setTypeSelectionne(typesBillets[0]);
+    if (!typeSelectionne) {
+      setTypeSelectionne("STANDARD");
     }
-  }, [typesBillets, typeSelectionne]);
+  }, [typeSelectionne]);
 
-  // Billets correspondant au type sélectionné
-  const billetsDuType = billetsDisponibles.filter(
-    (billet) => billet.type_billet === typeSelectionne
-  );
+  // Calcul du prix selon le type sélectionné
+  const prixEvenement = Number(event?.prix || 2500);
+  const prixMinimum = typeSelectionne === "VIP" ? prixEvenement * 2 : prixEvenement;
 
-  // Prix minimum du type sélectionné
-  const prixMinimum =
-    billetsDuType.length > 0
-      ? Math.min(
-          ...billetsDuType.map((billet) => Number(billet.prix))
-        )
-      : 0;
+  // Gestion de l'achat de billet
+  const handleAcheterBillet = () => {
+    // Si l'utilisateur n'est pas connecté, redirection vers login
+    if (!isAuthenticated) {
+      navigate("/auth/login");
+      return;
+    }
+    
+    // Ajout d'une offre au panier pour l'événement et le type choisi
+    const billetAchete = {
+      id: event?.id || 1,
+      type_billet: typeSelectionne,
+      prix: prixMinimum,
+    };
 
-  // Aucun billet disponible → on n'affiche pas la carte
-  if (billetsDisponibles.length === 0) {
-    return null;
-  }
+    addToCart(event, [billetAchete]);
+  };
 
   return (
     <div className="w-96 p-8 bg-white rounded-[32px] shadow-2xl outline outline-2 outline-offset-[-2px] outline-gray-100 flex flex-col gap-6">
@@ -54,7 +50,7 @@ export default function TicketCard({ event, onAddToCart }) {
         <div className="flex flex-col gap-1">
 
           <span className="text-stone-500 text-sm font-bold uppercase">
-            Prix à partir de
+            Prix
           </span>
 
           <div className="flex items-baseline gap-1">
@@ -69,11 +65,9 @@ export default function TicketCard({ event, onAddToCart }) {
 
         </div>
 
-        {billetsDuType.length > 0 && (
-          <span className="px-4 py-2 bg-red-600/10 rounded-xl text-red-600 text-sm font-bold">
-            Vente rapide
-          </span>
-        )}
+        <span className="px-4 py-2 bg-red-600/10 rounded-xl text-red-600 text-sm font-bold">
+          Vente rapide
+        </span>
       </div>
 
       {/* DISPONIBILITÉ */}
@@ -91,8 +85,7 @@ export default function TicketCard({ event, onAddToCart }) {
           </span>
 
           <span className="text-zinc-900 text-base font-bold">
-            Il reste {billetsDuType.length} billet
-            {billetsDuType.length > 1 ? "s" : ""}.
+            Billets disponibles
           </span>
 
         </div>
@@ -107,13 +100,13 @@ export default function TicketCard({ event, onAddToCart }) {
         onChange={setTypeSelectionne}
       />
 
-      {/* AJOUT AU PANIER */}
+      {/* AJOUT AU PANIER / ACHATER UN BILLET */}
       <button
         type="button"
-        onClick={() => onAddToCart?.(billetsDuType)}
+        onClick={handleAcheterBillet}
         className="self-stretch py-5 bg-blue-600 rounded-2xl shadow-[0px_10px_15px_-3px_rgba(0,85,164,0.30)] flex justify-center items-center"
       >
-        <span className="text-white text-xl font-bold uppercase">
+        <span className="text-white text-xl font-bold uppercase cursor-pointer">
           Ajouter au panier
         </span>
       </button>

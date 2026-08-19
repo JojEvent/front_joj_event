@@ -16,7 +16,11 @@ import EvenementsPage from "./pages/Evenementspage.jsx";
 import EventDetailPage from "./pages/EventDetailPage.jsx";
 import PageResultats from "./pages/resultats.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import PaiementPage from "./pages/PaiementPage.jsx";
+import SuccesPage from "./pages/SuccesPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
+import Favoris from "./pages/favoris.jsx";
+import MesBilletsPage from "./pages/MesBilletsPage.jsx";
 
 // Pages Articles & Rédaction
 import EspaceRedaction from "./pages/EspaceRedaction.jsx";
@@ -39,14 +43,17 @@ import EvenementAdmin from "./pages/admin/evenement.jsx";
 import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 
 const queryClient = new QueryClient();
 
 // Composant racine avec AuthProvider et ToastContainer
 const Root = () => (
   <AuthProvider>
+    <CartProvider>
     <Outlet />
     <ToastContainer position="top-right" autoClose={4000} />
+    </CartProvider>
   </AuthProvider>
 );
 
@@ -61,7 +68,12 @@ const router = createBrowserRouter([
       { path: "/resultat", element: <PageResultats /> },
       { path: "/resultats", element: <PageResultats /> },
       { path: "/panier", element: <CartPage /> },
+      { path: "/paiement", element: <PaiementPage /> },
+      { path: "/succes", element: <SuccesPage /> },
       { path: "/profil", element: <ProfilePage /> },
+      { path: "/favoris", element: <Favoris /> },
+      { path: "/souhaits", element: <Favoris /> },
+      { path: "/billets", element: <MesBilletsPage /> },
 
       // Routes Articles et Rédaction
       { path: "/redaction", element: <ProtectedRoute><EspaceRedaction /></ProtectedRoute> },

@@ -37,7 +37,7 @@ export default function OrderSummary({ items, onPay }) {
                     Sous-total
                   </span>
                   <span className="text-neutral-800 text-xl font-medium font-['Inter']">
-                    {formatFcfa(items[0]?.unitPrice ?? 0)} .x{totalQuantity}
+                    {formatFcfa(items[0]?.unitPrice ?? 0)} x {totalQuantity}
                   </span>
                 </div>
                 <div className="w-full flex justify-between items-center">
@@ -45,7 +45,7 @@ export default function OrderSummary({ items, onPay }) {
                     TTC
                   </span>
                   <span className="text-neutral-800 text-xl font-medium font-['Inter']">
-                    {formatFcfa(items[0]?.ttc ?? 0)} .x{totalQuantity}
+                    {formatFcfa(items[0]?.ttc ?? 0)} x {totalQuantity}
                   </span>
                 </div>
               </div>

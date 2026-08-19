@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEventById } from "../hooks/Useeventdetail";
 import { useEvents } from "../hooks/Usevents";
 
+
 export default function EventDetailPage() {
   const { id } = useParams();
   const { data, isLoading, isError } = useEventById(id);
@@ -86,7 +87,7 @@ export default function EventDetailPage() {
             {/* Sidebar billetterie */}
             <div className="w-full lg:w-96 self-stretch">
               <div className="sticky top-24">
-                <TicketCard event={data} onAddToCart={handleAddToCart} />
+                <TicketCard event={data}/>
               </div>
             </div>
           </div>

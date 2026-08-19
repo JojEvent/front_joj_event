@@ -1,9 +1,13 @@
+// import { useEffect, useMemo, useState } from "react";
+
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "../composants/Icon";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
 import { userApi, billetApi, favorisApi } from "../services/profile.service";
 import { getEventById } from "../services/events.service";
+import { useAuth } from "../context/authContext";
 
 const evenementApi = { getById: getEventById };
 
@@ -137,6 +141,8 @@ function ActivityRow({ icon: Icon, title, description, date, positive = false })
 }
 
 const ProfilePage = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [events, setEvents] = useState({});
@@ -150,6 +156,22 @@ const ProfilePage = () => {
     localStorage.getItem("profile_email_notifications") !== "false",
   );
   const [localActivity, setLocalActivity] = useState(null);
+//   const handleLogout = () => {
+//   // Supprime les différentes formes de stockage du JWT
+//   localStorage.removeItem("accessToken");
+//   localStorage.removeItem("access_token");
+//   localStorage.removeItem("token");
+//   localStorage.removeItem("tokens");
+
+//   // Nettoyage éventuel du sessionStorage
+//   sessionStorage.removeItem("accessToken");
+//   sessionStorage.removeItem("access_token");
+//   sessionStorage.removeItem("token");
+//   sessionStorage.removeItem("tokens");
+
+//   // Retour à la page d'accueil
+//   navigate("/");
+// };
 
   const loadProfile = async () => {
     setLoading(true);
@@ -468,10 +490,28 @@ const ProfilePage = () => {
               <ChevronRight className="h-4 w-4 text-slate-400" />
             </div>
 
-            <button className="mt-7 flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-600">
+            {/* <button className="mt-7 flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-600">
               <XCircle className="h-4 w-4" />
               Déconnexion de tous les appareils
-            </button>
+            </button> */}
+
+            {/* LE NOVEAU BOUTON DE DÉCONNEXION DE TOUS LES APPAREILS AVEC LA FONCTION handleLogout */}
+
+            {/* <button
+  type="button"
+  onClick={handleLogout}
+  className="mt-7 flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-600"
+>
+  <XCircle className="h-4 w-4" />
+  Déconnexion de tous les appareils
+</button> */}
+<button
+  onClick={logout}
+  className="mt-7 flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-600"
+>
+  <XCircle className="h-4 w-4" />
+  Déconnexion de tous les appareils
+</button>
           </section>
         </div>
 
