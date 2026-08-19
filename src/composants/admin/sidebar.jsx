@@ -5,7 +5,7 @@ import NavLinksProps from "./navLinksProps";
 
 const Sidebar = () => {
   return (
-    <div className="w-56 h-screen bg-radial from-zinc-900 to-zinc-900 border-r border-gray-200 inline-flex flex-col justify-start items-start fixed">
+    <div className="w-56 shrink-0 h-screen bg-zinc-900 border-r border-zinc-800 flex flex-col justify-start items-start sticky top-0">
       {/* Logo */}
       <div className="self-stretch flex flex-col justify-start items-start gap-2.5">
         <div className="self-stretch h-16 relative border-b border-gray-200">

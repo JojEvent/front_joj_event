@@ -15,6 +15,10 @@ import MailIcon from "../assets/mail.svg";
 import ArrowLeftIcon from "../assets/arrowLeft.svg";
 import illust  from "../assets/illust.svg";
 import CheckIcon  from "../assets/check.svg";
+import IllustAdmin from "../assets/illustAdmin.svg"
+import LogoAdmin from "../assets/logoAdmin.svg"
+import GoogleIcon from "../assets/googleIcon.svg"
+
 export {
   DashboardIcon,
   EventIcon,
@@ -32,5 +36,8 @@ export {
   MailIcon,
   ArrowLeftIcon,
   illust,
-  CheckIcon
+  CheckIcon,
+  IllustAdmin,
+  LogoAdmin,
+  GoogleIcon
 };

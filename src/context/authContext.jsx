@@ -8,11 +8,23 @@ import { useContext } from "react";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      try {
+        return JSON.parse(savedUser);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
+  const [loading, setLoading] = useState(
+    () => !!localStorage.getItem("accessToken") && !localStorage.getItem("user")
+  );
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("accessToken")
+    () => !!localStorage.getItem("accessToken")
   );
 
   const navigate = useNavigate();
@@ -21,7 +33,8 @@ const AuthProvider = ({ children }) => {
     if (!tokens) return;
     if (tokens.access) {
       localStorage.setItem("accessToken", tokens.access);
-      instanceApi.defaults.headers.common["Authorization"] = `Bearer ${tokens.access}`;
+      instanceApi.defaults.headers.common["Authorization"] =
+        `Bearer ${tokens.access}`;
     }
     if (tokens.refresh) {
       localStorage.setItem("refreshToken", tokens.refresh);
@@ -34,6 +47,7 @@ const AuthProvider = ({ children }) => {
     try {
       const res = await instanceApi.get("/user/profile/");
       setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
     } catch (e) {
       console.error("Erreur chargement profil OAuth:", e);
     }
@@ -47,13 +61,21 @@ const AuthProvider = ({ children }) => {
         .get("/user/profile/")
         .then((res) => {
           setUser(res.data);
+          localStorage.setItem("user", JSON.stringify(res.data));
           setIsAuthenticated(true);
         })
         .catch(() => {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          setUser(null);
           setIsAuthenticated(false);
+        })
+        .finally(() => {
+          setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -117,18 +139,33 @@ const AuthProvider = ({ children }) => {
       const response = await instanceApi.post("/auth/login/", credential);
       const data = response.data;
       if (response.status === 200 || response.status === 201) {
-        setUser(data.user ?? data);
         setIsAuthenticated(true);
         toast.success("Connexion réussie");
         saveToken(data.tokens);
-        if (data?.user?.verify_email ?? data?.verify_email) {
+
+        let profile = null;
+        try {
+          const profileRes = await instanceApi.get("/user/profile/");
+          profile = profileRes.data;
+          setUser(profile);
+          localStorage.setItem("user", JSON.stringify(profile));
+        } catch {
+          setUser(data.user ?? data);
+          localStorage.setItem("user", JSON.stringify(data.user ?? data));
+        }
+
+        if (data?.verify_email) {
           toast.info("Veuillez vérifier votre email");
           navigate("/auth/verify-email");
-        } else if (data?.user?.needs_onboarding ?? data?.needs_onboarding) {
+        } else if (data?.needs_onboarding) {
           toast.info("Veuillez compléter votre profil");
           navigate("/onboarding");
+        } else if (profile?.is_staff || profile?.role === "ADMIN") {
+          // Administrateur → espace admin
+          navigate("/admin");
         } else {
-          window.location.href = "/"
+          // Utilisateur normal → accueil
+          navigate("/");
         }
       }
     } catch (err) {
@@ -181,59 +218,54 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const refreshToken = localStorage.getItem("refreshToken")
+      const refreshToken = localStorage.getItem("refreshToken");
       const response = await instanceApi.post("/user/logout/", {
-        refresh: refreshToken
-      })
-      const data = response.data
+        refresh: refreshToken,
+      });
+      const data = response.data;
       if (response.status === 200 || response.status === 201) {
-        setUser(null)
-        toast.success("Déconnexion réussie")
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
-        navigate("/auth/login")
-        return { success: true }
+        setUser(null);
+        toast.success("Déconnexion réussie");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+        navigate("/auth/login");
+        return { success: true };
       }
     } catch (error) {
-      const errData = error.response?.data
+      const errData = error.response?.data;
       const message =
         errData?.detail ||
         errData?.message ||
         error.message ||
-        "Erreur lors de la déconnexion"
-      setError(message)
-      toast.error(message)
-      return { success: false, fieldErrors: errData || {} }
+        "Erreur lors de la déconnexion";
+      setError(message);
+      toast.error(message);
+      return { success: false, fieldErrors: errData || {} };
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  // const profile = async () => {
-  //   setLoading(true)
-  //   try {
-  //     const response = await instanceApi.get("/user/profile/")
-  //     const data = response.data
-  //     if (response.status === 200 || response.status === 201) {
-  //       setUser(data)
-  //       return { success: true }
-  //     }
-  //   } catch (error) {
-  //     const errData = error.response?.data
-  //     const message =
-  //       errData?.detail ||
-  //       errData?.message ||
-  //       error.message ||
-  //       "Erreur lors de la récupération du profil"
-  //     setError(message)
-  //     toast.error(message)
-  //     return { success: false, fieldErrors: errData || {} }
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+ const allProfiles = async () => {
+  try {
+    const response = await instanceApi.get("/user/profiles/");
+    if (response.status === 200 || response.status === 201) {
+      return { success: true, data: response.data };
+    }
+    return { success: false, data: [] };
+  } catch (error) {
+    const errData = error.response?.data;
+    const message =
+      errData?.detail ||
+      errData?.message ||
+      error.message ||
+      "Erreur lors de la récupération des profils";
+    return { success: false, message, data: [] };
+  }
+ };
 
   return (
     <AuthContext.Provider
@@ -246,6 +278,7 @@ const AuthProvider = ({ children }) => {
         saveToken,
         completeOnboarding,
         logout,
+        allProfiles,
         user,
         loading,
         error,

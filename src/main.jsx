@@ -1,6 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 
@@ -42,6 +47,8 @@ import SiteOlympiqueAdmin from "./pages/admin/siteOlympique.jsx";
 import BilleterieAdmin from "./pages/admin/billeterie.jsx";
 import UserGestionAdmin from "./pages/admin/userGestion.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+import Login from "./pages/admin/login.jsx";
+import ProtetedAdminRoute from "./pages/admin/protectedAdminRoute.jsx";
 
 const queryClient = new QueryClient();
 
@@ -49,8 +56,8 @@ const queryClient = new QueryClient();
 const Root = () => (
   <AuthProvider>
     <CartProvider>
-    <Outlet />
-    <ToastContainer position="top-right" autoClose={4000} />
+      <Outlet />
+      <ToastContainer position="top-right" autoClose={4000} />
     </CartProvider>
   </AuthProvider>
 );
@@ -79,12 +86,18 @@ const router = createBrowserRouter([
       { path: "/article", element: <ArticlePage /> },
 
       // Routes Admin
+
+      { path: "/admin/login", element: <Login /> },
+
       {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+          <ProtetedAdminRoute>
+            <AdminLayout />
+          </ProtetedAdminRoute>
+        ),
         children: [
           { index: true, element: <DashboardAdmin /> },
-          { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
           { path: "siteOlympique", element: <SiteOlympiqueAdmin /> },
           { path: "billeterie", element: <BilleterieAdmin /> },
@@ -113,5 +126,5 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );

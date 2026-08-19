@@ -3,11 +3,11 @@ import Sidebar from "../../composants/admin/sidebar";
 
 const AdminLayout = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen w-full overflow-hidden bg-gray-50">
       <Sidebar />
-      <div className="flex-1 overflow-auto">
+      <main className="flex-1 min-w-0 h-screen overflow-y-auto">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };
