@@ -16,7 +16,7 @@ const Header = () => {
   const { items } = useCart()
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const navLinks = ["Événements", "Carte", "Billets", "Résultat"];
+  const navLinks = ["Événements", "Carte", "Billets", "Résultat", "Articles"];
 
   const naviguerVers = (link) => {
     if (link === "Résultat") {
@@ -32,6 +32,8 @@ const Header = () => {
       }
     } else if (link === "Carte") {
       navigate("/carte");
+    } else if (link === "Articles"){
+      navigate("/articles");
     } else {
       toast.info(`La page ${link} sera bientôt disponible !`);
     }
