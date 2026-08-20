@@ -1,6 +1,13 @@
 function MessageBubble({ message }) {
   const isUser = message.role === "user";
 
+  const messageTime = message.timestamp
+  ? new Date(message.timestamp).toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "";
+
   if (isUser) {
     return (
       <div className="self-stretch flex flex-col justify-start items-end">
@@ -14,7 +21,7 @@ function MessageBubble({ message }) {
 
         <div className="size- pr-1 pt-1 flex flex-col justify-start items-start">
           <div className="justify-center text-gray-400 text-[9px] font-normal font-['Inter'] leading-3 tracking-tight">
-            Maintenant
+            {messageTime}
           </div>
         </div>
       </div>
@@ -31,7 +38,7 @@ function MessageBubble({ message }) {
 
       <div className="size- pl-1 pt-1 flex flex-col justify-start items-start">
         <div className="justify-center text-gray-400 text-[9px] font-normal font-['Inter'] leading-3 tracking-tight">
-          Maintenant
+          {messageTime}
         </div>
       </div>
     </div>
