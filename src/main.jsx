@@ -104,7 +104,8 @@ const router = createBrowserRouter([
           </ProtetedAdminRoute>
         ),
         children: [
-          { index: true, element: <DashboardAdmin /> },
+          { index: true, element: <Navigate to="dashboard" replace /> },
+          { path: "dashboard", element: <DashboardAdmin /> },
           { path: "evenement", element: <EvenementAdmin /> },
           { path: "siteOlympique", element: <SiteOlympiqueAdmin /> },
           { path: "billeterie", element: <BilleterieAdmin /> },
