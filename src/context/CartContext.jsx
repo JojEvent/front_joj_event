@@ -46,35 +46,47 @@ export function CartProvider({ children }) {
 
   /**
    * Ajoute des billets au panier.
-   * @param {object} event - l'événement affiché (contient titre, date, image...)
-   * @param {object[]} billetsSelectionnes - billets à ajouter (ex: billetsDuType)
+   * Si le type de billet pour cet événement existe déjà dans le panier, augmente sa quantité.
    */
   const addToCart = useCallback((event, billetSelectionnes) => {
     setItems((prev) => {
-        //retourner les id des billets présents
-      const idsExistants = new Set(prev.map((item) => item.billetId));
+      const copy = [...prev];
+      const eventId = event?.id;
+      const typeBillet = billetSelectionnes[0]?.type_billet || "Standard";
 
-      const nouveauxArticles = billetSelectionnes
-      //Filtrer les nouveaux billets
-        .filter((billet) => !idsExistants.has(billet.id))
-        .map((billet) => ({
-          id: `billet-${billet.id}`,
-          billetId: billet.id,
-          eventId: event?.id,
+      // Chercher si un article pour le même événement et même type de billet existe déjà
+      const existingIndex = copy.findIndex(
+        (item) => item.eventId === eventId && item.ticketType === typeBillet
+      );
+
+      if (existingIndex > -1) {
+        // Si présent, on incrémente sa quantité de 1
+        copy[existingIndex] = {
+          ...copy[existingIndex],
+          quantity: copy[existingIndex].quantity + 1,
+        };
+        return copy;
+      } else {
+        // Sinon, on l'ajoute au panier
+        const premierBillet = billetSelectionnes[0] || {};
+        const newItem = {
+          id: `cart-${eventId}-${typeBillet}-${Date.now()}`,
+          billetId: premierBillet.id,
+          eventId: eventId,
           eventTitle: event?.titre ?? event?.nom ?? "",
           dateLabel: formatEventDate(event?.date_debut),
-          ticketType: billet.type_billet,
+          ticketType: typeBillet,
           seatInfo:
-            billet.section || billet.rangee || billet.siege
-              ? `Section ${billet.section ?? "-"}, Rangée ${billet.rangee ?? "-"}, Siège ${billet.siege ?? "-"}`
+            premierBillet.section || premierBillet.rangee || premierBillet.siege
+              ? `Section ${premierBillet.section ?? "-"}, Rangée ${premierBillet.rangee ?? "-"}, Siège ${premierBillet.siege ?? "-"}`
               : "Place non numérotée",
-          unitPrice: Number(billet.prix),
-          ttc: Number(billet.ttc ?? 0),
+          unitPrice: Number(premierBillet.prix || 0),
+          ttc: Number(premierBillet.ttc ?? 0),
           quantity: 1,
-          image: event?.image_principale ?? "https://placehold.co/170x160",
-        }));
-
-      return [...prev, ...nouveauxArticles];
+          image: event?.image ?? event?.image_principale ?? "https://placehold.co/170x160",
+        };
+        return [...copy, newItem];
+      }
     });
   }, []);
 

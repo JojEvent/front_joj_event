@@ -23,7 +23,14 @@ const Header = () => {
       navigate("/resultat");
     } else if (link === "Événements") {
       navigate("/evenements");
-    } else if (link === "Billets" || link === "Carte") {
+    } else if (link === "Billets") {
+      if (!isAuthenticated) {
+        toast.info("Veuillez vous connecter pour consulter vos billets.");
+        navigate("/auth/login");
+      } else {
+        navigate("/billets");
+      }
+    } else if (link === "Carte") {
       navigate("/panier");
     } else {
       toast.info(`La page ${link} sera bientôt disponible !`);
@@ -78,7 +85,7 @@ const Header = () => {
                   {/* Badge uniquement sur l'icône panier */}
                     {item.path === "/panier" && items.length > 0 && (
                       <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                        {items.length}
+                        {items.reduce((acc, current) => acc + (current.quantity || 1), 0)}
                       </span>
                     )}
                 </div>

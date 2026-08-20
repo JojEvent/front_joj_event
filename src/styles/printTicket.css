@@ -1,0 +1,38 @@
+/* styles/printTicket.css - Style d'impression du billet sur une seule page */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    height: 100vh !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  /* Masquer tous les éléments de la page à l'impression */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Afficher uniquement la carte du billet */
+  #billet-a-imprimer, #billet-a-imprimer * {
+    visibility: visible !important;
+  }
+
+  /* Centrer la carte du billet sur la page A4 unique */
+  #billet-a-imprimer {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
