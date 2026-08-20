@@ -31,7 +31,7 @@ const Header = () => {
         navigate("/billets");
       }
     } else if (link === "Carte") {
-      navigate("/panier");
+      navigate("/carte");
     } else {
       toast.info(`La page ${link} sera bientôt disponible !`);
     }
