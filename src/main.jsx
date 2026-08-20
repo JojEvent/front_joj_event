@@ -12,6 +12,7 @@ import AuthProvider from "./context/authContext.jsx";
 
 // Pages principales
 import Acceuil from "./pages/acceuil.jsx";
+import CartePage from "./pages/CartePage.jsx";
 import EvenementsPage from "./pages/Evenementspage.jsx";
 import EventDetailPage from "./pages/EventDetailPage.jsx";
 import PageResultats from "./pages/resultats.jsx";
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Acceuil /> },
       { path: "/evenements", element: <EvenementsPage /> },
+      { path: "/carte", element: <CartePage /> },
       { path: "/evenements/:id", element: <EventDetailPage /> },
       { path: "/resultat", element: <PageResultats /> },
       { path: "/resultats", element: <PageResultats /> },
