@@ -221,31 +221,23 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      const response = await instanceApi.post("/user/logout/", {
-        refresh: refreshToken,
-      });
-      const data = response.data;
-      if (response.status === 200 || response.status === 201) {
-        setUser(null);
-        toast.success("Déconnexion réussie");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("user");
-        navigate("/auth/login");
-        return { success: true };
+      if (refreshToken) {
+        await instanceApi.post("/user/logout/", {
+          refresh: refreshToken,
+        });
       }
     } catch (error) {
-      const errData = error.response?.data;
-      const message =
-        errData?.detail ||
-        errData?.message ||
-        error.message ||
-        "Erreur lors de la déconnexion";
-      setError(message);
-      toast.error(message);
-      return { success: false, fieldErrors: errData || {} };
+      console.warn("Erreur logout API (nettoyage local forcé):", error);
     } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+      delete instanceApi.defaults.headers.common["Authorization"];
+      toast.success("Déconnexion réussie");
       setLoading(false);
+      navigate("/auth/login");
     }
   };
 
