@@ -33,6 +33,7 @@ import EspaceRedaction from "./pages/EspaceRedaction.jsx";
 import ArticlePage from "./pages/ArticlePage.jsx";
 import ArticlesList from "./pages/ArticlesList.jsx";
 import ArticleDetail from "./pages/ArticleDetail.jsx";
+import ProtectedRoute from "./composants/ProtectedRoute";
 
 // Pages Auth
 import LoginAuth from "./pages/auth/loginAuth.jsx";
@@ -87,8 +88,8 @@ const router = createBrowserRouter([
       { path: "/billets", element: <MesBilletsPage /> },
 
       // Routes Articles et Rédaction
-      { path: "/redaction", element: <EspaceRedaction /> },
-      { path: "/articles", element: <ArticlesList /> },
+      { path: "/redaction", element: <ProtectedRoute><EspaceRedaction /></ProtectedRoute> },
+      { path: "/articles", element: <ProtectedRoute><ArticlesList /></ProtectedRoute> },
       { path: "/articles/:id", element: <ArticleDetail /> },
       { path: "/article", element: <ArticlePage /> },
 
