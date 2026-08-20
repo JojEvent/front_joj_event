@@ -11,22 +11,28 @@ export default function EspaceRedaction() {
   const editorRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    titre: "Les sprinteurs sénégalais se préparent pour l'or à Diamniadio",
-    resume:
-      "À quelques mois du lancement officiel des JOJ Dakar 2026, l'équipe nationale d'athlétisme peaufine ses réglages sur la toute nouvelle piste d'entraînement de Diamniadio. Récit exclusif d'une préparation intense.",
-    statut: "EN_REVISION",
+    titre: "",
+    resume: "",
+    statut: "BROUILLON",
     discipline: "",
   });
 
   // Contenu HTML géré par la zone d'édition WYSIWYG
-  const [htmlContenu, setHtmlContenu] = useState(
-    "L'entraînement bat son plein sous le soleil de l'après-midi. À Diamniadio, les jeunes sprinteurs sénégalais mesurent chaque foulée. Sous la supervision rigoureuse du staff technique national, l'accent est mis sur l'explosivité au départ des starting-blocks.<br/><br/><b>\"Le niveau technique mondial exige une précision chirurgicale dès le premier appui,\"</b> explique l'entraîneur en chef. Les athlètes se plient à des séries répétées de 30 mètres chronométrées, analysées instantanément par vidéo.<br/><br/>Les athlètes bénéficient désormais d'installations flambant neuves, calquées sur les standards olympiques internationaux. La ferveur monte à l'idée de courir devant le public dakarois, qui attend cet événement de pied ferme depuis des années."
-  );
+  const [htmlContenu, setHtmlContenu] = useState("");
 
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [disciplines, setDisciplines] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Injecter le contenu HTML dans l'éditeur UNE SEULE FOIS au montage
+  // (évite le bug de curseur causé par dangerouslySetInnerHTML + onInput qui se marchent dessus)
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = htmlContenu;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 1. Charger la liste REELLE des disciplines depuis le backend Django (GET /api/disciplines/)
   useEffect(() => {
@@ -336,11 +342,14 @@ export default function EspaceRedaction() {
                 </div>
 
                 {/* Zone éditable WYSIWYG (contentEditable) */}
+                {/* Le contenu est injecté une seule fois via useEffect (voir plus haut),
+                    jamais via dangerouslySetInnerHTML ici, pour éviter que React
+                    ne réécrive le DOM à chaque frappe (ce qui causait le bug de curseur) */}
                 <div
                   ref={editorRef}
                   contentEditable
                   onInput={() => setHtmlContenu(editorRef.current?.innerHTML || "")}
-                  dangerouslySetInnerHTML={{ __html: htmlContenu }}
+                  suppressContentEditableWarning={true}
                   className="w-full p-4 min-h-[220px] text-slate-800 text-sm leading-relaxed font-normal focus:outline-none overflow-y-auto"
                 />
               </div>
@@ -382,31 +391,7 @@ export default function EspaceRedaction() {
                   </div>
                 </label>
 
-                {/* Option 2 : En révision */}
-                <label
-                  onClick={() => setFormData((p) => ({ ...p, statut: "EN_REVISION" }))}
-                  className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
-                    formData.statut === "EN_REVISION"
-                      ? "border-sky-500 bg-sky-50/50 ring-1 ring-sky-500"
-                      : "border-slate-200 hover:bg-slate-50"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="statut"
-                    checked={formData.statut === "EN_REVISION"}
-                    onChange={() => {}}
-                    className="mt-1 text-sky-600 focus:ring-sky-500"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-slate-900">En révision</span>
-                    <span className="text-xs text-slate-500">
-                      Envoyer pour vérification par les éditeurs
-                    </span>
-                  </div>
-                </label>
-
-                {/* Option 3 : Publié */}
+                {/* Option 2 : Publié (l'option "En révision" a été retirée) */}
                 <label
                   onClick={() => setFormData((p) => ({ ...p, statut: "PUBLIE" }))}
                   className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
@@ -431,22 +416,22 @@ export default function EspaceRedaction() {
                 </label>
               </div>
 
-              {/* Boutons d'action */}
+              {/* Boutons d'action : désactivation croisée selon le statut sélectionné */}
               <div className="flex flex-col gap-3 pt-2">
                 <button
                   type="button"
-                  disabled={isLoading}
+                  disabled={isLoading || formData.statut === "PUBLIE"}
                   onClick={() => handleSubmit("draft")}
-                  className="w-full py-3 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
+                  className="w-full py-3 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   Enregistrer comme brouillon
                 </button>
 
                 <button
                   type="button"
-                  disabled={isLoading}
+                  disabled={isLoading || formData.statut === "BROUILLON"}
                   onClick={() => handleSubmit("publish")}
-                  className="w-full py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm transition-colors shadow-md disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

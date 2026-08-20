@@ -89,7 +89,7 @@ export default function ArticleDetail() {
           </h1>
           {article.image_principale && (
             <img
-              src={`http://127.0.0.1:8000${article.image_principale}`}
+              src={article.image_principale}
               alt={article.titre}
               className="w-full h-64 md:h-96 object-cover rounded-lg mb-6"
             />
@@ -120,7 +120,7 @@ export default function ArticleDetail() {
                 >
                   {related.image_principale && (
                     <img
-                      src={`http://127.0.0.1:8000${related.image_principale}`}
+                      src={related.image_principale}
                       alt={related.titre}
                       className="w-full h-48 object-cover"
                     />
