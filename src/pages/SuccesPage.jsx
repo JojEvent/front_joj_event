@@ -68,7 +68,7 @@ export default function SuccesPage() {
         title: "Mon Billet JOJ Dakar 2026",
         text: "Voici mon billet officiel pour les Jeux Olympiques de la Jeunesse !",
         url: window.location.href,
-      }).catch(() => {});
+      }).catch(() => { });
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Lien de votre billet copié !");
@@ -82,14 +82,19 @@ export default function SuccesPage() {
     billet?.evenement_nom ||
     "Événement JOJ Dakar 2026";
 
+  const heureAchat = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   const purchaseData = {
     eventTitle: titreEvenement,
-    quantity: 1,
+    quantity: billet?.quantite || billet?.quantity || 1,
     totalAmount: billet?.prix ? Number(billet.prix) : 5000,
     section: billet?.type_billet || "STANDARD",
     seats: billet?.siege || "Place réservée",
     date: billet?.evenement_detail?.date_debut || billet?.evenement_detail?.date || "JOJ 2026",
-    time: "18h00",
+    time: heureAchat,
     image: billet?.evenement_detail?.image_principale || billet?.evenement_detail?.image,
   };
 
