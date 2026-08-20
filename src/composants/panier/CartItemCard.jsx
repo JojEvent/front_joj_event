@@ -29,9 +29,16 @@ export default function CartItemCard({ item, onEdit, onDelete }) {
           {/*<p className="text-neutral-800 text-base font-normal font-['Inter'] line-clamp-1">
             {item.seatInfo}
           </p>*/}
-          <p className="text-neutral-800 text-base font-bold font-['Olympic_Headline']">
-            prix {formatFcfa(item.unitPrice)}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-neutral-800 text-base font-bold font-['Olympic_Headline']">
+              Prix unitaire: {formatFcfa(item.unitPrice)}
+            </p>
+            {item.quantity > 1 && (
+              <span className="px-2.5 py-1 bg-stone-100 rounded-lg text-sm font-semibold text-neutral-800">
+                Quantité : {item.quantity}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col justify-between items-center gap-6">

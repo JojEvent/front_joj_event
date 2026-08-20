@@ -25,6 +25,7 @@ import PaiementPage from "./pages/PaiementPage.jsx";
 import SuccesPage from "./pages/SuccesPage.jsx";
 import ProfilePage from "./pages/profile.jsx";
 import Favoris from "./pages/favoris.jsx";
+import MesBilletsPage from "./pages/MesBilletsPage.jsx";
 
 // Pages Articles & Rédaction
 import EspaceRedaction from "./pages/EspaceRedaction.jsx";
@@ -51,6 +52,7 @@ import Login from "./pages/admin/login.jsx";
 import ProtetedAdminRoute from "./pages/admin/protectedAdminRoute.jsx";
 
 import { CartProvider } from "./context/CartContext.jsx";
+import Assistant from "./composants/assistant/Assistant.jsx";
 
 const queryClient = new QueryClient();
 
@@ -82,12 +84,15 @@ const router = createBrowserRouter([
       { path: "/admin/login", element: <Login /> },
       { path: "/favoris", element: <Favoris /> },
       { path: "/souhaits", element: <Favoris /> },
+      { path: "/billets", element: <MesBilletsPage /> },
 
       // Routes Articles et Rédaction
       { path: "/redaction", element: <EspaceRedaction /> },
       { path: "/articles", element: <ArticlesList /> },
       { path: "/articles/:id", element: <ArticleDetail /> },
       { path: "/article", element: <ArticlePage /> },
+
+      { path: "/assistant", element: <Assistant /> },
 
       // Routes Admin
 

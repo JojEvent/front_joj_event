@@ -7,21 +7,22 @@ import CartTimer from "../composants/panier/CartTimer";
 import PaymentOrderSummary from "../composants/paiement/PaymentOrderSummary";
 import PaymentMethodSelector from "../composants/paiement/PaymentMethodSelector";
 import PaymentFormFields from "../composants/paiement/PaymentFormFields";
-import {
-  stepsMock,
-  reservationTimeLimitMock,
-  cartItemsMock,
-} from "../../mocks/panierMock";
+import { stepsMock, reservationTimeLimitMock } from "../../mocks/panierMock";
+import { useCart } from "../context/CartContext";
+import { instance } from "../services/api";
 import { toast } from "react-toastify";
 
 /**
  * Page "Paiement" du tunnel de réservation JOJ Dakar 2026 (Étape 3).
- * Respecte le principe de responsabilité unique en assemblant les composants métier isolés.
+ * Intègre PayDunya avec l'API Backend Django tout en conservant la structure d'origine.
  */
 export default function PaiementPage() {
   const navigate = useNavigate();
-  const [items] = useState(cartItemsMock);
+  
+  // Utiliser les articles réels du panier et la fonction de vidage
+  const { items, clearCart } = useCart();
   const [selectedMethod, setSelectedMethod] = useState("card");
+  const [enChargement, setEnChargement] = useState(false);
 
   // Calcul du montant total
   const totalSubtotal = items.reduce(
@@ -39,14 +40,42 @@ export default function PaiementPage() {
     navigate("/panier");
   };
 
-  const handlePaymentSubmit = (paymentData) => {
-    console.log("Paiement effectué :", {
-      method: selectedMethod,
-      paymentData,
-      totalAmount,
-    });
-    toast.success("Paiement réussi ! Génération de vos billets...");
-    navigate("/succes");
+  /**
+   * Soumission du paiement :
+   * Appelle l'endpoint PayDunya du backend Django pour créer la facture et rediriger vers la passerelle.
+   */
+  const handlePaymentSubmit = async () => {
+    if (!items || items.length === 0) {
+      toast.error("Votre panier est vide !");
+      navigate("/panier");
+      return;
+    }
+
+    setEnChargement(true);
+    toast.info("Initialisation du paiement sécurisé PayDunya...");
+
+    try {
+      // 1. Appeler l'action ModelViewSet PayDunya sur l'API Django
+      const response = await instance.post("billets/paydunya-payer/", {
+        items: items,
+      });
+
+      // 2. Vider le panier après l'initialisation réussie de la facture
+      clearCart();
+
+      // 3. Rediriger l'utilisateur vers la passerelle sécurisée PayDunya
+      if (response.data && response.data.url_paiement) {
+        window.location.href = response.data.url_paiement;
+      } else {
+        toast.error("Lien de paiement non reçu. Veuillez réessayer.");
+        setEnChargement(false);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la demande PayDunya:", error);
+      const messageErreur = error.response?.data?.erreur || "Impossible de contacter le service de paiement PayDunya.";
+      toast.error(messageErreur);
+      setEnChargement(false);
+    }
   };
 
   return (
