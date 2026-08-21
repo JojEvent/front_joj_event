@@ -54,7 +54,7 @@ export default function CarteMap({
     : null;
 
   return (
-    <div className="relative w-full h-full min-h-[520px] rounded-2xl overflow-hidden">
+    <div className="relative z-0 isolate w-full h-full min-h-[520px] rounded-2xl overflow-hidden">
       <MapContainer
         ref={mapRef}
         center={siteCoords}
@@ -110,7 +110,7 @@ export default function CarteMap({
 
       {/* Bandeau d'info sur l'itinéraire en cours */}
       {(isLocating || routeInfo || (selectedInfra && !userPosition)) && (
-        <div className="absolute left-4 bottom-4 right-4 sm:right-auto sm:max-w-xs bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 flex items-start gap-2 z-[1000]">
+        <div className="absolute left-4 bottom-4 right-4 sm:right-auto sm:max-w-xs bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 flex items-start gap-2 z-[400]">
           <Locate className="w-4 h-4 mt-0.5 text-sky-700 shrink-0" />
           <div className="text-xs text-neutral-700 font-olympic leading-5">
             {isLocating && "Localisation en cours pour calculer votre itinéraire..."}

@@ -391,12 +391,43 @@ export default function EvenementForm({
                   required
                 >
                   <option value="">Sélectionner une discipline</option>
-                  {disciplines.map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {d.nom}
-                    </option>
-                  ))}
+                  {allowedDisciplineIds.length > 0 ? (
+                    <>
+                      <optgroup label={`Disciplines autorisées (${selectedInfraObj?.nom})`}>
+                        {disciplines
+                          .filter((d) => allowedDisciplineIds.includes(d.id))
+                          .map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.nom}
+                            </option>
+                          ))}
+                      </optgroup>
+                      <optgroup label="Autres disciplines (nécessite association au site)">
+                        {disciplines
+                          .filter((d) => !allowedDisciplineIds.includes(d.id))
+                          .map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.nom} (Non autorisée dans ce lieu)
+                            </option>
+                          ))}
+                      </optgroup>
+                    </>
+                  ) : (
+                    disciplines.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.nom}
+                      </option>
+                    ))
+                  )}
                 </select>
+                {selectedInfraObj &&
+                  allowedDisciplineIds.length > 0 &&
+                  Boolean(formData.discipline) &&
+                  !allowedDisciplineIds.includes(Number(formData.discipline)) && (
+                    <p className="text-xs text-amber-600 mt-1 font-medium">
+                      ⚠️ "{selectedDisciplineObj?.nom || 'Cette discipline'}" n'est pas autorisée au "{selectedInfraObj.nom}". Activez-la dans "Sites Olympiques" ou choisissez une discipline autorisée.
+                    </p>
+                  )}
               </div>
 
               {/* Date de l'événement */}

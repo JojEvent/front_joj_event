@@ -57,9 +57,12 @@ const EventCard = ({
       {/* ================= IMAGE ================= */}
       <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[30px]">
         <img
-          src={image}
+          src={image || "/src/assets/basket.png"}
           alt={title}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = "/src/assets/basket.png";
+          }}
         />
 
         {/* Badges */}

@@ -1,10 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { ArrowLeft, Plus, Check, Loader2 } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { ArrowLeft, Plus, Check, Loader2, Image as ImageIcon, Upload, X, Trash2, Camera } from "lucide-react";
 import { instanceApi } from "../../services/api";
 import { toast } from "react-toastify";
 
+const getFullImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:")) {
+    return url;
+  }
+  return `http://127.0.0.1:8000${url.startsWith("/") ? "" : "/"}${url}`;
+};
+
 export default function SiteOlympiqueForm({ initialData = null, onCancel, onSuccess }) {
   const isEditing = Boolean(initialData?.id);
+  const fileInputRef = useRef(null);
 
   const [sites, setSites] = useState([]);
   const [disciplinesList, setDisciplinesList] = useState([]);
@@ -32,6 +41,13 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
       ? initialData.disciplines.map((d) => d.id || d)
       : [],
   });
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(
+    initialData?.image_infrastructure
+      ? getFullImageUrl(initialData.image_infrastructure)
+      : null
+  );
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -68,6 +84,31 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Veuillez sélectionner un fichier image valide (JPG, PNG, WEBP...)");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("L'image ne doit pas dépasser 10 Mo");
+      return;
+    }
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleDisciplineToggle = (id) => {
@@ -151,35 +192,88 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
         return;
       }
 
-      const payload = {
+      // Payload JSON classique — discipline_ids pour le champ writable du serializer
+      const disciplineIds = formData.selectedDisciplines.map((id) => Number(id));
+
+      const jsonPayload = {
         site: Number(finalSiteId),
         nom: formData.nom.trim(),
         description: formData.description.trim(),
         capacite: formData.capacite ? Number(formData.capacite) : null,
         actif: formData.actif,
-        disciplines: formData.selectedDisciplines,
+        discipline_ids: disciplineIds,
       };
 
+      console.log("=== PAYLOAD INFRASTRUCTURE ===");
+      console.log("isEditing:", isEditing);
+      console.log("disciplines sélectionnées:", formData.selectedDisciplines);
+      console.log("disciplines envoyées (IDs):", disciplineIds);
+      console.log("payload complet:", JSON.stringify(jsonPayload, null, 2));
+
+      let savedInfra;
+
       if (isEditing) {
-        await instanceApi.patch(`/infrastructures/${initialData.id}/`, payload);
+        const res = await instanceApi.patch(`/infrastructures/${initialData.id}/`, jsonPayload);
+        savedInfra = res.data;
+        console.log("=== RÉPONSE PATCH ===", JSON.stringify(res.data, null, 2));
         toast.success("Infrastructure / Site mis à jour avec succès");
       } else {
-        await instanceApi.post("/infrastructures/", payload);
+        const res = await instanceApi.post("/infrastructures/", jsonPayload);
+        savedInfra = res.data;
+        console.log("=== RÉPONSE POST ===", JSON.stringify(res.data, null, 2));
         toast.success("Infrastructure / Site créé avec succès");
+      }
+
+      // Upload de l'image séparément si un fichier a été sélectionné
+      if (imageFile && savedInfra?.id) {
+        try {
+          const imagePayload = new FormData();
+          imagePayload.append("image_infrastructure", imageFile);
+
+          const imgRes = await instanceApi.patch(`/infrastructures/${savedInfra.id}/`, imagePayload, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          console.log("=== RÉPONSE IMAGE PATCH ===", JSON.stringify(imgRes.data, null, 2));
+        } catch (imgError) {
+          console.warn("Image non uploadée:", imgError);
+          console.warn("Réponse erreur image:", imgError.response?.data);
+          toast.error("Infrastructure sauvegardée, mais l'image n'a pas pu être uploadée.");
+        }
       }
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
+      console.error("Erreur enregistrement infrastructure:", error);
       const errData = error.response?.data;
-      const message =
-        errData?.detail ||
-        errData?.nom?.[0] ||
-        errData?.site?.[0] ||
-        errData?.non_field_errors?.[0] ||
-        error.message ||
-        "Erreur lors de l'enregistrement";
+      let message = "Erreur lors de l'enregistrement";
+
+      if (errData) {
+        if (typeof errData === "string") {
+          message = errData;
+        } else if (Array.isArray(errData)) {
+          message = errData[0];
+        } else if (errData.image_infrastructure) {
+          const imgMsg = Array.isArray(errData.image_infrastructure)
+            ? errData.image_infrastructure[0]
+            : errData.image_infrastructure;
+          message = `Image : ${imgMsg}`;
+        } else if (errData.detail) {
+          message = errData.detail;
+        } else if (Array.isArray(errData.non_field_errors)) {
+          message = errData.non_field_errors[0];
+        } else {
+          const firstKey = Object.keys(errData)[0];
+          if (firstKey) {
+            const val = errData[firstKey];
+            const fieldMsg = Array.isArray(val) ? val[0] : val;
+            message = `${firstKey}: ${fieldMsg}`;
+          }
+        }
+      } else if (error.message) {
+        message = error.message;
+      }
       toast.error(message);
     } finally {
       setSubmitting(false);
@@ -192,7 +286,7 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
         <button
           type="button"
           onClick={onCancel}
-          className="p-2 rounded-full hover:bg-gray-100 transition text-gray-600"
+          className="p-2 rounded-full hover:bg-gray-100 transition text-gray-600 cursor-pointer"
           title="Retour"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -202,12 +296,13 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
             {isEditing ? "Modifier le site / infrastructure" : "Ajouter un site & infrastructure"}
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-            Renseignez les informations du site olympique, de son infrastructure et de ses disciplines associées.
+            Renseignez les informations du site olympique, de son infrastructure, son image et ses disciplines.
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* SECTION 1 : Site Olympique */}
         <div className="bg-gray-50/70 p-4 rounded-xl border border-gray-200/70 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-900 uppercase tracking-wider">
@@ -218,7 +313,7 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
                 <button
                   type="button"
                   onClick={() => setSiteMode("existing")}
-                  className={`px-3 py-1 rounded-md font-medium transition ${
+                  className={`px-3 py-1 rounded-md font-medium transition cursor-pointer ${
                     siteMode === "existing"
                       ? "bg-white text-gray-900 shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
@@ -229,7 +324,7 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
                 <button
                   type="button"
                   onClick={() => setSiteMode("new")}
-                  className={`px-3 py-1 rounded-md font-medium transition ${
+                  className={`px-3 py-1 rounded-md font-medium transition cursor-pointer ${
                     siteMode === "new"
                       ? "bg-white text-gray-900 shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
@@ -296,6 +391,7 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
           )}
         </div>
 
+        {/* SECTION 2 : Informations de l'infrastructure */}
         <div className="space-y-4">
           <span className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
             2. Informations de l'infrastructure
@@ -347,11 +443,86 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
           </div>
         </div>
 
+        {/* SECTION 3 : Image de l'infrastructure */}
+        <div className="space-y-3 pt-2 border-t border-gray-100">
+          <div>
+            <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
+              3. Image de l'infrastructure
+            </label>
+            <span className="text-[11px] text-gray-500">
+              Téléchargez une photo représentative de l'infrastructure (format JPG, PNG ou WebP).
+            </span>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+            id="infrastructure-image-input"
+          />
+
+          {imagePreview ? (
+            <div className="relative rounded-2xl border border-gray-200 overflow-hidden bg-gray-50 max-w-lg group">
+              <img
+                src={imagePreview}
+                alt="Aperçu infrastructure"
+                className="w-full h-48 sm:h-56 object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "";
+                }}
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-3.5 py-2 rounded-lg bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold flex items-center gap-1.5 shadow transition cursor-pointer"
+                >
+                  <Camera className="w-4 h-4" />
+                  <span>Changer l'image</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="px-3.5 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Supprimer</span>
+                </button>
+              </div>
+              {imageFile && (
+                <div className="absolute bottom-2 left-2 px-2.5 py-1 bg-black/70 rounded-md text-[11px] text-white backdrop-blur-xs">
+                  {imageFile.name} ({(imageFile.size / (1024 * 1024)).toFixed(2)} Mo)
+                </div>
+              )}
+            </div>
+          ) : (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-gray-300 hover:border-emerald-500 bg-gray-50/60 hover:bg-emerald-50/20 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition max-w-lg text-center"
+            >
+              <div className="p-3.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
+                <Upload className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">
+                  Cliquez pour importer une image
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  PNG, JPG, WEBP jusqu'à 10 Mo
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* SECTION 4 : Disciplines associées */}
         <div className="space-y-3 pt-2 border-t border-gray-100">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
-                3. Disciplines associées
+                4. Disciplines associées
               </label>
               <span className="text-[11px] text-gray-500">
                 Sélectionnez les disciplines qui se déroulent dans cette infrastructure.
@@ -361,7 +532,7 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
             <button
               type="button"
               onClick={() => setShowNewDisciplineInput(!showNewDisciplineInput)}
-              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-lg transition"
+              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-lg transition cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Créer une nouvelle discipline</span>
@@ -381,14 +552,14 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
                 type="button"
                 disabled={addingDiscipline || !newDisciplineName.trim()}
                 onClick={handleCreateNewDiscipline}
-                className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+                className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
               >
                 {addingDiscipline ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Ajouter"}
               </button>
               <button
                 type="button"
                 onClick={() => setShowNewDisciplineInput(false)}
-                className="px-2 py-1.5 text-xs text-gray-500 hover:text-gray-700"
+                className="px-2 py-1.5 text-xs text-gray-500 hover:text-gray-700 cursor-pointer"
               >
                 Annuler
               </button>
@@ -406,7 +577,7 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
                     key={d.id}
                     type="button"
                     onClick={() => handleDisciplineToggle(d.id)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition flex items-center gap-1.5 cursor-pointer ${
                       isSelected
                         ? "bg-emerald-500 text-white border-emerald-500 font-semibold shadow-xs"
                         : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
@@ -421,25 +592,46 @@ export default function SiteOlympiqueForm({ initialData = null, onCancel, onSucc
           </div>
         </div>
 
+        {/* SECTION 5 : Statut Actif */}
+        <div className="pt-2 border-t border-gray-100 flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="infra-actif"
+            name="actif"
+            checked={formData.actif}
+            onChange={handleChange}
+            className="w-4 h-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500 cursor-pointer"
+          />
+          <label htmlFor="infra-actif" className="text-xs font-semibold text-gray-800 cursor-pointer select-none">
+            Infrastructure active et visible au public
+          </label>
+        </div>
+
+        {/* Boutons d'action */}
         <div className="flex justify-end items-center gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"
             onClick={onCancel}
             disabled={submitting}
-            className="px-5 py-2.5 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition"
+            className="px-5 py-2.5 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition cursor-pointer"
           >
             Annuler
           </button>
           <button
             type="submit"
             disabled={submitting || loadingOptions}
-            className="px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-sm font-semibold text-white transition shadow-sm flex items-center gap-2"
+            className="px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-sm font-semibold text-white transition shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
-            {submitting
-              ? "Enregistrement..."
-              : isEditing
-              ? "Enregistrer les modifications"
-              : "+ Ajouter le site"}
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Enregistrement...</span>
+              </>
+            ) : isEditing ? (
+              "Enregistrer les modifications"
+            ) : (
+              "+ Ajouter le site / infrastructure"
+            )}
           </button>
         </div>
       </form>

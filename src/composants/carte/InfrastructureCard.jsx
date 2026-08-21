@@ -1,6 +1,14 @@
 // composants/carte/InfrastructureCard.jsx
 import { Navigation, ImageOff } from "lucide-react";
 
+const getFullImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:")) {
+    return url;
+  }
+  return `http://127.0.0.1:8000${url.startsWith("/") ? "" : "/"}${url}`;
+};
+
 export default function InfrastructureCard({
   infrastructure,
   // hubNumber,  poutr l'instant, à remettre si besoin
@@ -8,6 +16,7 @@ export default function InfrastructureCard({
   onSuivreItineraire,
 }) {
   const disciplines = infrastructure.disciplines ?? [];
+  const imageUrl = getFullImageUrl(infrastructure.image_infrastructure);
 
   return (
     <div
@@ -16,12 +25,15 @@ export default function InfrastructureCard({
         isSelected ? "border-green-600 ring-1 ring-green-600" : "border-neutral-200",
       ].join(" ")}
     >
-      <div className="relative w-full h-40">
-        {infrastructure.image_infrastructure ? (
+      <div className="relative w-full h-40 bg-neutral-100 flex items-center justify-center">
+        {imageUrl ? (
           <img
-            src={infrastructure.image_infrastructure}
+            src={imageUrl}
             alt={infrastructure.nom}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
         ) : (
           <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
