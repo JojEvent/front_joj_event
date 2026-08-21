@@ -66,6 +66,8 @@ export default function InfrastructureCard({
 
         <button
           type="button"
+          // onClick={() => window.open("https://www.google.com/maps", "_blank")}
+
           onClick={() => onSuivreItineraire(infrastructure.id)}
           className="w-full mt-1 py-2.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 text-sm font-olympic-medium flex items-center justify-center gap-2 transition-colors cursor-pointer"
         >

@@ -34,56 +34,145 @@ export default function CartePage() {
 
   const activeInfrastructures = infrastructuresBySite[activeSiteId] ?? [];
 
+  // const handleChangeSite = (siteId) => {
+  //   setActiveSiteId(siteId);
+  //   setSelectedInfrastructureId(null);
+  //   setUserPosition(null);
+  //   setRoutePath(null);
+  //   setRouteInfo(null);
+  // };
+
+
+
   const handleChangeSite = (siteId) => {
-    setActiveSiteId(siteId);
-    setSelectedInfrastructureId(null);
-    setUserPosition(null);
-    setRoutePath(null);
-    setRouteInfo(null);
-  };
+  setActiveSiteId(siteId);
+  resetTracking();
+};
 
-  // Point 6 du brief : "Suivre itinéraire" amène sur la carte et guide vers
-  // l'infrastructure choisie (à partir de la position de l'utilisateur si
-  // le navigateur l'autorise).
-  const handleSuivreItineraire = (infrastructureId) => {
-    setSelectedInfrastructureId(infrastructureId);
-    setRoutePath(null);
-    setRouteInfo(null);
 
-    const infra = activeInfrastructures.find((i) => i.id === infrastructureId);
-    const destination = getInfrastructureCoords(activeSite, infra);
-    if (!destination || !navigator.geolocation) {
-      setUserPosition(null);
-      return;
-    }
+// NOUVELLE FONCTION
+// const handleSuivreItineraire = (infrastructureId) => {
+//   const infrastructure = activeInfrastructures.find(
+//     (infra) => infra.id === infrastructureId
+//   );
 
-    setIsLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const origin = [position.coords.latitude, position.coords.longitude];
-        setUserPosition(origin);
+//   if (!infrastructure) {
+//     return;
+//   }
 
-        try {
-          const route = await fetchRouteBetween(origin, destination);
-          if (route) {
-            setRoutePath(route.path);
-            setRouteInfo({ distanceKm: route.distanceKm, durationMin: route.durationMin });
-          }
-        } catch (err) {
-          console.error("Erreur de calcul d'itinéraire :", err);
-        } finally {
-          setIsLocating(false);
-        }
-      },
-      () => {
-        // Géolocalisation refusée ou indisponible : on garde simplement le
-        // marqueur sélectionné et on recentre la carte dessus.
-        setUserPosition(null);
-        setIsLocating(false);
-      },
-      { enableHighAccuracy: true, timeout: 8000 }
-    );
-  };
+//   const googleMapsUrl =
+//     `https://www.google.com/maps/dir/?api=1&destination=` +
+//     encodeURIComponent(infrastructure.nom);
+
+//   window.open(googleMapsUrl, "_blank");
+// };
+
+//   // Point 6 du brief : "Suivre itinéraire" amène sur la carte et guide vers
+//   // l'infrastructure choisie (à partir de la position de l'utilisateur si
+//   // le navigateur l'autorise).
+//   const handleSuivreItineraire = (infrastructureId) => {
+//     setSelectedInfrastructureId(infrastructureId);
+//     setRoutePath(null);
+//     setRouteInfo(null);
+
+//     const infra = activeInfrastructures.find((i) => i.id === infrastructureId);
+//     const destination = getInfrastructureCoords(activeSite, infra);
+//     if (!destination || !navigator.geolocation) {
+//       setUserPosition(null);
+//       return;
+//     }
+
+//     setIsLocating(true);
+
+//     //MODIFIEFR EN watchPosition
+
+
+//     // navigator.geolocation.getCurrentPosition(
+//     //   async (position) => {
+//     //     const origin = [position.coords.latitude, position.coords.longitude];
+//     //     setUserPosition(origin);
+
+//     //     try {
+//     //       const route = await fetchRouteBetween(origin, destination);
+//     //       if (route) {
+//     //         setRoutePath(route.path);
+//     //         setRouteInfo({ distanceKm: route.distanceKm, durationMin: route.durationMin });
+//     //       }
+//     //     } catch (err) {
+//     //       console.error("Erreur de calcul d'itinéraire :", err);
+//     //     } finally {
+//     //       setIsLocating(false);
+//     //     }
+//     //   },
+//     //   () => {
+//     //     // Géolocalisation refusée ou indisponible : on garde simplement le
+//     //     // marqueur sélectionné et on recentre la carte dessus.
+//     //     setUserPosition(null);
+//     //     setIsLocating(false);
+//     //   },
+//     //   { enableHighAccuracy: true, timeout: 8000 }
+//     // );
+
+
+//     watchIdRef.current = navigator.geolocation.watchPosition(
+//       async (position) => {
+//         const origin = [position.coords.latitude, position.coords.longitude];
+//         setUserPosition(origin);
+//         setIsLocating(false);
+//         setGeoError(null);
+
+//         // Distance restante recalculée à chaque mise à jour GPS : c'est ce
+//         // qui fait "descendre" les mètres au fur et à mesure qu'on approche.
+//         const distance = getDistanceMeters(origin, destinationRef.current);
+//         setLiveDistanceMeters(distance);
+//         setHasArrived(distance != null && distance <= ARRIVAL_THRESHOLD_M);
+
+//         // Le tracé de l'itinéraire (la ligne sur la carte) n'a besoin
+//         // d'être calculé qu'une fois, à la première position reçue — pas à
+//         // chaque mise à jour GPS, pour ne pas surcharger le service public
+//         // de routage OSRM.
+//         if (!routeFetchedRef.current) {
+//           routeFetchedRef.current = true;
+//           try {
+//             const route = await fetchRouteBetween(origin, destinationRef.current);
+//             if (route) {
+//               setRoutePath(route.path);
+//               setRouteInfo({ distanceKm: route.distanceKm, durationMin: route.durationMin });
+//             }
+//           } catch (err) {
+//             console.error("Erreur de calcul d'itinéraire :", err);
+//           }
+//         }
+//       },
+//       () => {
+//         // Géolocalisation refusée ou indisponible : on garde simplement le
+//         // marqueur sélectionné et on recentre la carte dessus.
+//         setIsLocating(false);
+//         setUserPosition(null);
+//         setGeoError(
+//           "Localisation refusée ou indisponible. Activez-la pour être guidé en temps réel."
+//         );
+//       },
+//       { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+//     );
+//   };
+
+
+const handleSuivreItineraire = (infrastructureId) => {
+  const infrastructure = activeInfrastructures.find(
+    (infra) => infra.id === infrastructureId
+  );
+
+  if (!infrastructure) {
+    return;
+  }
+
+  const googleMapsUrl =
+    `https://www.google.com/maps/dir/?api=1&destination=` +
+    encodeURIComponent(infrastructure.nom);
+
+  window.open(googleMapsUrl, "_blank");
+};
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">

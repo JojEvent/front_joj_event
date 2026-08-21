@@ -63,3 +63,32 @@ export async function fetchRouteBetween(start, end) {
     durationMin: route.duration / 60,
   };
 }
+
+
+// PARTIE MODIFIE DE MON CODE
+export function getDistanceMeters(a, b) {
+  if (!a || !b) return null;
+  const [lat1, lng1] = a;
+  const [lat2, lng2] = b;
+
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+
+  const sinDLat = Math.sin(dLat / 2);
+  const sinDLng = Math.sin(dLng / 2);
+
+  const h =
+    sinDLat * sinDLat +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * sinDLng * sinDLng;
+
+  return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(h));
+}
+
+// Formatte une distance en mètres pour l'affichage : "850 m" en dessous de
+// 1 km, "1,2 km" au-dessus, pour un affichage type guidage GPS.
+export function formatDistance(meters) {
+  if (meters == null) return "";
+  if (meters < 1000) return `${Math.round(meters)} m`;
+  return `${(meters / 1000).toFixed(1)} km`;
+}
