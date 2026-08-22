@@ -1,41 +1,66 @@
 // components/events/Pagination.jsx
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-function PageButton({ page, isCurrent, onClick }) {
+export default function Pagination({ currentPage = 1, totalPages = 1, onChange }) {
+  if (!totalPages || totalPages <= 1) return null;
+
+  const pages = [];
+  for (let i = 1; i <= totalPages; i++) {
+    if (
+      i === 1 ||
+      i === totalPages ||
+      (i >= currentPage - 1 && i <= currentPage + 1)
+    ) {
+      pages.push(i);
+    } else if (pages[pages.length - 1] !== "...") {
+      pages.push("...");
+    }
+  }
+
   return (
-    <button
-      type="button"
-      onClick={() => onClick?.(page)}
-      className={`px-3 py-2 rounded-lg flex flex-col justify-center items-center ${
-        isCurrent ? "bg-Primaire" : ""
-      }`}
-    >
-      <span
-        className={`text-base font-normal font-['Olympic_Sans'] leading-4 ${
-          isCurrent ? "text-Text-Brand-On-Brand" : "text-Text-Default-Default"
-        }`}
+    <nav className="self-stretch pb-20 flex justify-center items-center gap-2 px-4" aria-label="Pagination">
+      <button
+        type="button"
+        disabled={currentPage === 1}
+        onClick={() => onChange(currentPage - 1)}
+        className="p-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+        title="Page précédente"
       >
-        {page}
-      </span>
-    </button>
-  );
-}
+        <ChevronLeft className="w-4 h-4" />
+      </button>
 
-export default function Pagination({ currentPage, totalPages, onChange }) {
-  // Affiche 1, 2, 3 ... avant-dernière, dernière (comme la maquette)
-  const pages = [1, 2, 3];
-
-  return (
-    <nav className="self-stretch pb-24 flex justify-center items-start">
-      <div className="flex justify-start items-center gap-2">
-        {pages.map((p) => (
-          <PageButton key={p} page={p} isCurrent={p === currentPage} onClick={onChange} />
-        ))}
-        <span className="px-4 py-2 text-black-100 text-base font-bold font-['Olympic_Sans_Bold'] leading-6">
-          ...
-        </span>
-        <PageButton page={totalPages - 1} isCurrent={totalPages - 1 === currentPage} onClick={onChange} />
-        <PageButton page={totalPages} isCurrent={totalPages === currentPage} onClick={onChange} />
+      <div className="flex items-center gap-1.5">
+        {pages.map((p, idx) =>
+          p === "..." ? (
+            <span key={`dots-${idx}`} className="px-2 text-gray-400 font-bold">
+              ...
+            </span>
+          ) : (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onChange(p)}
+              className={`w-10 h-10 rounded-xl text-sm font-bold transition cursor-pointer flex items-center justify-center ${
+                p === currentPage
+                  ? "bg-emerald-600 text-white shadow-xs"
+                  : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              {p}
+            </button>
+          )
+        )}
       </div>
+
+      <button
+        type="button"
+        disabled={currentPage === totalPages}
+        onClick={() => onChange(currentPage + 1)}
+        className="p-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+        title="Page suivante"
+      >
+        <ChevronRight className="w-4 h-4" />
+      </button>
     </nav>
   );
 }

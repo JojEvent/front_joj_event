@@ -7,7 +7,30 @@ import MessageList from "./MessageList";
 import AssistantInput from "./AssistantInput";
 
 function Assistant({ onClose }) {
+  //question contient la question poser par l'utilisateur
   const [question, setQuestion] = useState("");
+
+  //messages représente l'historique de la conversation affiché dans ton interface.
+  /*
+  [
+  {
+    role: "user",
+    content: "Quels sont les sites olympiques ?"
+  },
+  {
+    role: "assistant",
+    content: "Les JOJ se dérouleront notamment à Dakar..."
+  },
+  {
+    role: "user",
+    content: "Et à Diamniadio ?"
+  },
+  {
+    role: "assistant",
+    content: "..."
+  }
+]
+  */
   const [messages, setMessages] = useState([]);
 
   const {
@@ -17,28 +40,39 @@ function Assistant({ onClose }) {
   } = useAssistant();
 
   const sendQuestion = (rawQuestion) => {
+    //supprimer les espaces inutiles au début et à la fin
     const currentQuestion = rawQuestion.trim();
-
+    // verifier s'il n'y a pas de question ou s'il y'a un chargement
     if (!currentQuestion || isPending) {
       return;
     }
 
+    // Ajouter immédiatement la question de l'utilisateur
+    setMessages((previousMessages) => [
+      ...previousMessages,
+      {
+        role: "user",
+        content: currentQuestion,
+        timestamp: new Date(),
+      },
+    ]);
+
+    //on lance la requete en donnant en paramettre, la question  et les options pour l'exécution de la mutation
     mutate(currentQuestion, {
+      //onSuccess est exécuté uniquement si l'appel réussit.
+      //lorsque la requête réussit, on met a jour le tableau message
       onSuccess: (data) => {
         setMessages((previousMessages) => [
           ...previousMessages,
 
           {
-            role: "user",
-            content: currentQuestion,
-          },
-
-          {
             role: "assistant",
             content: data.response.answer,
+            timestamp: new Date(),
           },
         ]);
 
+        //remettre le champ de saisie à vide
         setQuestion("");
       },
     });

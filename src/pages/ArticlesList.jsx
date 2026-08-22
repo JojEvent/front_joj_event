@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import Header from "../composants/header";
 import Footer from "../composants/footer";
 import articlesService from "../services/articles.service";
+import { useAuth } from "../context/authContext";
 
 export default function ArticlesList() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -63,12 +65,14 @@ export default function ArticlesList() {
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Tous les articles</h1>
-          <Link
-            to="/redaction"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Nouveau article
-          </Link>
+          {user && user.role === "JOURNALISTE" && (
+            <Link
+              to="/redaction"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Nouveau article
+            </Link>
+          )}
         </div>
         
         {articles.length === 0 ? (
@@ -83,7 +87,7 @@ export default function ArticlesList() {
               >
                 {article.image_principale && (
                   <img
-                    src={`http://127.0.0.1:8000${article.image_principale}`}
+                    src={article.image_principale}
                     alt={article.titre}
                     className="w-full h-48 object-cover"
                   />

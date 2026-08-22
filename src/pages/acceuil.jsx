@@ -25,6 +25,8 @@ import article2 from "../assets/article2.png";
 import article3 from "../assets/article3.png";
 import article4 from "../assets/article4.png";
 import Assistant from "../composants/assistant/Assistant";
+import { useArticles } from "../hooks/useArticles";
+import { formatArticleDate } from "../utils/formatDate";
 
 // Icônes billetterie : placeholders Figma (63x50, 63x47, 64x48)
 const ticketSteps = [
@@ -122,6 +124,15 @@ const Acceuil = () => {
   const navigate = useNavigate();
   const { events: apiEvents, isLoading: isEventsLoading } = useEvents();
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const {
+  data,
+  isLoading,
+  isError,
+} = useArticles();
+
+const featuredArticle = data?.[data.length - 1];
+
+console.log("Articles :", data);
 
   const handleClick= ()=>{
     setIsAssistantOpen(true);
@@ -444,7 +455,32 @@ const Acceuil = () => {
 
             {/* 3 articles à gauche */}
             <div className="w-full lg:w-[519px] flex flex-col gap-2.5">
-              {journalArticles.map((article) => (
+
+              {isLoading ? (
+                <p className="text-stone-500">
+                  Chargement des articles...
+                </p>
+              ) : isError ? (
+                <p className="text-red-500">
+                  Impossible de charger les articles.
+                </p>
+              ) : data.length === 0 ? (
+                <p className="text-stone-500">
+                  Aucun article disponible pour le moment.
+                </p>
+              ) : (
+                data.slice(0, 3).map((article) => (
+                  <JournalArticle
+                    key={article.id}
+                    image={article.image_url}
+                    date={ formatArticleDate(article.created_at)}
+                    title={article.titre}
+                    description={article.resume}
+                  />
+                ))
+              )}
+
+              {/*{journalArticles.map((article) => (
                 <JournalArticle
                   key={article.title}
                   image={article.image}
@@ -452,10 +488,47 @@ const Acceuil = () => {
                   title={article.title}
                   description={article.description}
                 />
-              ))}
+              ))}*/}
+
             </div>
 
-            {/* Article vedette cyclisme */}
+            {/* Article vedette */}
+            {featuredArticle && (
+              <div className="w-full lg:w-[570px] h-[400px] lg:h-[609px] relative rounded-md overflow-hidden cursor-pointer">
+
+                <img
+                  className="w-full h-full object-cover absolute inset-0"
+                  src={featuredArticle.image_url}
+                  alt={featuredArticle.titre}
+                />
+
+                <div className="absolute inset-0 bg-black/60 rounded-md" />
+
+                <div className="relative z-10 h-full flex flex-col justify-between p-6 lg:p-8 text-white">
+
+                  {/* Catégorie */}
+                  <span className="w-fit px-6 py-2 rounded border border-gray-100 text-gray-100 text-xl font-medium capitalize">
+                    {featuredArticle.discipline?.nom || "JOJ Dakar 2026"}
+                  </span>
+
+                  <div className="flex flex-col gap-3.5">
+
+                    {/* Date */}
+                    <span className="text-white text-lg font-normal leading-5">
+                      {formatArticleDate(featuredArticle.created_at)}
+                    </span>
+
+                    {/* Titre */}
+                    <h3 className="text-white text-2xl lg:text-3xl font-bold font-olympic-headline capitalize">
+                      {featuredArticle.titre}
+                    </h3>
+
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Article vedette cyclisme 
             <div className="w-full lg:w-[570px] h-[400px] lg:h-[609px] relative rounded-md overflow-hidden cursor-pointer">
               <img
                 className="w-full h-full object-cover absolute inset-0"
@@ -474,7 +547,7 @@ const Acceuil = () => {
                   </h3>
                 </div>
               </div>
-            </div>
+            </div>*/}
           </div>
           </div>
         </section>

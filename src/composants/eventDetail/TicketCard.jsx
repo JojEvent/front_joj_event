@@ -20,12 +20,25 @@ export default function TicketCard({ event }) {
     }
   }, [typeSelectionne]);
 
+  // Vérifications de la date et des places disponibles
+  const estPasse = event?.date_fin
+    ? new Date(event.date_fin) < new Date()
+    : event?.date_debut
+    ? new Date(event.date_debut) < new Date()
+    : false;
+
+  const placesRestantes = event?.jauge_totale !== undefined ? Number(event.jauge_totale) : 500;
+  const estComplet = placesRestantes <= 0;
+  const impossibleDacheter = estPasse || estComplet;
+
   // Calcul du prix selon le type sélectionné
   const prixEvenement = Number(event?.prix || 2500);
   const prixMinimum = typeSelectionne === "VIP" ? prixEvenement * 2 : prixEvenement;
 
   // Gestion de l'achat de billet
   const handleAcheterBillet = () => {
+    if (impossibleDacheter) return;
+
     // Si l'utilisateur n'est pas connecté, redirection vers login
     if (!isAuthenticated) {
       navigate("/auth/login");
@@ -66,7 +79,7 @@ export default function TicketCard({ event }) {
         </div>
 
         <span className="px-4 py-2 bg-red-600/10 rounded-xl text-red-600 text-sm font-bold">
-          Vente rapide
+          {estPasse ? "Terminé" : estComplet ? "Épuisé" : "Vente rapide"}
         </span>
       </div>
 
@@ -85,12 +98,16 @@ export default function TicketCard({ event }) {
           </span>
 
           <span className="text-zinc-900 text-base font-bold">
-            Billets disponibles
+            {estPasse
+              ? "Événement passé"
+              : estComplet
+              ? "Événement complet (0 place)"
+              : `${placesRestantes} places disponibles`}
           </span>
 
         </div>
 
-        <span className="size-2 bg-green-700 rounded-full" />
+        <span className={`size-3 rounded-full ${impossibleDacheter ? "bg-red-600" : "bg-green-700"}`} />
       </div>
 
       {/* SÉLECTION DU TYPE */}
@@ -103,11 +120,20 @@ export default function TicketCard({ event }) {
       {/* AJOUT AU PANIER / ACHATER UN BILLET */}
       <button
         type="button"
+        disabled={impossibleDacheter}
         onClick={handleAcheterBillet}
-        className="self-stretch py-5 bg-blue-600 rounded-2xl shadow-[0px_10px_15px_-3px_rgba(0,85,164,0.30)] flex justify-center items-center"
+        className={`self-stretch py-5 rounded-2xl flex justify-center items-center ${
+          impossibleDacheter
+            ? "bg-gray-300 cursor-not-allowed shadow-none"
+            : "bg-blue-600 shadow-[0px_10px_15px_-3px_rgba(0,85,164,0.30)] cursor-pointer"
+        }`}
       >
-        <span className="text-white text-xl font-bold uppercase cursor-pointer">
-          Ajouter au panier
+        <span className="text-white text-xl font-bold uppercase">
+          {estPasse
+            ? "Événement passé"
+            : estComplet
+            ? "Événement complet"
+            : "Ajouter au panier"}
         </span>
       </button>
 

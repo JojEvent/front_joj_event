@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
  */
 export default function PaiementPage() {
   const navigate = useNavigate();
-  
+
   // Utiliser les articles réels du panier et la fonction de vidage
   const { items, clearCart } = useCart();
   const [selectedMethod, setSelectedMethod] = useState("card");

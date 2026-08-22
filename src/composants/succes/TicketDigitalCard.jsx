@@ -22,13 +22,13 @@ export default function TicketDigitalCard({
     >
       {/* En-tête avec Image de fond et titre */}
       <div className="relative w-full h-56 flex flex-col justify-between p-6 overflow-hidden">
-        {/* Image d'arrière-plan avec dégradé sombre */}
+        {/* Image d'arrière-plan claire et visible */}
         <img
           src={image}
           alt={eventTitle}
-          className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+          className="absolute inset-0 w-full h-full object-cover opacity-85"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-zinc-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-zinc-900/90" />
 
         <div className="relative z-10 text-center flex flex-col items-center gap-1">
           <h3 className="text-xl font-bold font-['Olympic_Headline'] tracking-wide">

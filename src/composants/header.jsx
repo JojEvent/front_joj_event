@@ -16,7 +16,7 @@ const Header = () => {
   const { items } = useCart()
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const navLinks = ["Événements", "Carte", "Billets", "Résultat"];
+  const navLinks = ["Événements", "Carte", "Billets", "Résultat", "Articles"];
 
   const naviguerVers = (link) => {
     if (link === "Résultat") {
@@ -31,7 +31,9 @@ const Header = () => {
         navigate("/billets");
       }
     } else if (link === "Carte") {
-      navigate("/panier");
+      navigate("/carte");
+    } else if (link === "Articles"){
+      navigate("/articles");
     } else {
       toast.info(`La page ${link} sera bientôt disponible !`);
     }
@@ -93,7 +95,7 @@ const Header = () => {
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <Link
+              {/*<Link
                 to="/favoris"
                 className="w-9 h-9 px-2 py-1.5 bg-stone-50 rounded-full shadow-[0px_2px_4px_0px_rgba(0,0,0,0.25)] flex justify-center items-center cursor-pointer hover:bg-stone-100 transition-colors"
                 title="Mes favoris"
@@ -106,7 +108,7 @@ const Header = () => {
                 title="Mon profil"
               >
                 <img src={ProfilIcon} alt="Profil" className="w-4 h-4" />
-              </Link>
+              </Link>*/}
               <Link
                 to="/auth/register"
                 className="px-4 py-2 text-sm font-medium font-olympic text-black bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors"

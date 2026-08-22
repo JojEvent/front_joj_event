@@ -109,7 +109,7 @@ export default function ArticlePage() {
               >
                 {article.image_principale && (
                   <img
-                    src={`http://127.0.0.1:8000${article.image_principale}`}
+                    src={article.image_principale}
                     alt={article.titre}
                     className="w-full h-48 object-cover"
                   />
